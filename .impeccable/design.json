@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T21:08:21.738627+00:00",
+  "title": "Design System: PathFinding Emulator",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Bg",
+        "tonalRamp": [
+          "oklch(15% 0.0111 268.01)",
+          "oklch(26% 0.0111 268.01)",
+          "oklch(38% 0.0111 268.01)",
+          "oklch(49% 0.0111 268.01)",
+          "oklch(61% 0.0111 268.01)",
+          "oklch(72% 0.0111 268.01)",
+          "oklch(84% 0.0111 268.01)",
+          "oklch(95% 0.0111 268.01)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(15% 0.0146 266.89)",
+          "oklch(26% 0.0146 266.89)",
+          "oklch(38% 0.0146 266.89)",
+          "oklch(49% 0.0146 266.89)",
+          "oklch(61% 0.0146 266.89)",
+          "oklch(72% 0.0146 266.89)",
+          "oklch(84% 0.0146 266.89)",
+          "oklch(95% 0.0146 266.89)"
+        ]
+      },
+      "raised": {
+        "role": "neutral",
+        "displayName": "Raised",
+        "tonalRamp": [
+          "oklch(15% 0.0178 266.29)",
+          "oklch(26% 0.0178 266.29)",
+          "oklch(38% 0.0178 266.29)",
+          "oklch(49% 0.0178 266.29)",
+          "oklch(61% 0.0178 266.29)",
+          "oklch(72% 0.0178 266.29)",
+          "oklch(84% 0.0178 266.29)",
+          "oklch(95% 0.0178 266.29)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "tonalRamp": [
+          "oklch(15% 0.0221 267.39)",
+          "oklch(26% 0.0221 267.39)",
+          "oklch(38% 0.0221 267.39)",
+          "oklch(49% 0.0221 267.39)",
+          "oklch(61% 0.0221 267.39)",
+          "oklch(72% 0.0221 267.39)",
+          "oklch(84% 0.0221 267.39)",
+          "oklch(95% 0.0221 267.39)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Text",
+        "tonalRamp": [
+          "oklch(15% 0.0041 271.37)",
+          "oklch(26% 0.0041 271.37)",
+          "oklch(38% 0.0041 271.37)",
+          "oklch(49% 0.0041 271.37)",
+          "oklch(61% 0.0041 271.37)",
+          "oklch(72% 0.0041 271.37)",
+          "oklch(84% 0.0041 271.37)",
+          "oklch(95% 0.0041 271.37)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.0262 263.30)",
+          "oklch(26% 0.0262 263.30)",
+          "oklch(38% 0.0262 263.30)",
+          "oklch(49% 0.0262 263.30)",
+          "oklch(61% 0.0262 263.30)",
+          "oklch(72% 0.0262 263.30)",
+          "oklch(84% 0.0262 263.30)",
+          "oklch(95% 0.0262 263.30)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "tonalRamp": [
+          "oklch(15% 0.1741 38.54)",
+          "oklch(26% 0.1741 38.54)",
+          "oklch(38% 0.1741 38.54)",
+          "oklch(49% 0.1741 38.54)",
+          "oklch(61% 0.1741 38.54)",
+          "oklch(72% 0.1741 38.54)",
+          "oklch(84% 0.1741 38.54)",
+          "oklch(95% 0.1741 38.54)"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On Accent",
+        "tonalRamp": [
+          "oklch(15% 0.0173 45.05)",
+          "oklch(26% 0.0173 45.05)",
+          "oklch(38% 0.0173 45.05)",
+          "oklch(49% 0.0173 45.05)",
+          "oklch(61% 0.0173 45.05)",
+          "oklch(72% 0.0173 45.05)",
+          "oklch(84% 0.0173 45.05)",
+          "oklch(95% 0.0173 45.05)"
+        ]
+      },
+      "good": {
+        "role": "secondary",
+        "displayName": "Good",
+        "tonalRamp": [
+          "oklch(15% 0.1546 129.17)",
+          "oklch(26% 0.1546 129.17)",
+          "oklch(38% 0.1546 129.17)",
+          "oklch(49% 0.1546 129.17)",
+          "oklch(61% 0.1546 129.17)",
+          "oklch(72% 0.1546 129.17)",
+          "oklch(84% 0.1546 129.17)",
+          "oklch(95% 0.1546 129.17)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Primary Hover",
+        "tonalRamp": [
+          "oklch(15% 0.1381 40.33)",
+          "oklch(26% 0.1381 40.33)",
+          "oklch(38% 0.1381 40.33)",
+          "oklch(49% 0.1381 40.33)",
+          "oklch(61% 0.1381 40.33)",
+          "oklch(72% 0.1381 40.33)",
+          "oklch(84% 0.1381 40.33)",
+          "oklch(95% 0.1381 40.33)"
+        ]
+      },
+      "secondary-hover": {
+        "role": "neutral",
+        "displayName": "Secondary Hover",
+        "tonalRamp": [
+          "oklch(15% 0.0247 265.56)",
+          "oklch(26% 0.0247 265.56)",
+          "oklch(38% 0.0247 265.56)",
+          "oklch(49% 0.0247 265.56)",
+          "oklch(61% 0.0247 265.56)",
+          "oklch(72% 0.0247 265.56)",
+          "oklch(84% 0.0247 265.56)",
+          "oklch(95% 0.0247 265.56)"
+        ]
+      },
+      "selected-text": {
+        "role": "secondary",
+        "displayName": "Selected Text",
+        "tonalRamp": [
+          "oklch(15% 0.0588 44.76)",
+          "oklch(26% 0.0588 44.76)",
+          "oklch(38% 0.0588 44.76)",
+          "oklch(49% 0.0588 44.76)",
+          "oklch(61% 0.0588 44.76)",
+          "oklch(72% 0.0588 44.76)",
+          "oklch(84% 0.0588 44.76)",
+          "oklch(95% 0.0588 44.76)"
+        ]
+      },
+      "selected-tile": {
+        "role": "secondary",
+        "displayName": "Selected Tile",
+        "tonalRamp": [
+          "oklch(15% 0.0254 51.13)",
+          "oklch(26% 0.0254 51.13)",
+          "oklch(38% 0.0254 51.13)",
+          "oklch(49% 0.0254 51.13)",
+          "oklch(61% 0.0254 51.13)",
+          "oklch(72% 0.0254 51.13)",
+          "oklch(84% 0.0254 51.13)",
+          "oklch(95% 0.0254 51.13)"
+        ]
+      },
+      "stage": {
+        "role": "neutral",
+        "displayName": "Stage",
+        "tonalRamp": [
+          "oklch(15% 0.0188 270.28)",
+          "oklch(26% 0.0188 270.28)",
+          "oklch(38% 0.0188 270.28)",
+          "oklch(49% 0.0188 270.28)",
+          "oklch(61% 0.0188 270.28)",
+          "oklch(72% 0.0188 270.28)",
+          "oklch(84% 0.0188 270.28)",
+          "oklch(95% 0.0188 270.28)"
+        ]
+      },
+      "error": {
+        "role": "secondary",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.0987 28.55)",
+          "oklch(26% 0.0987 28.55)",
+          "oklch(38% 0.0987 28.55)",
+          "oklch(49% 0.0987 28.55)",
+          "oklch(61% 0.0987 28.55)",
+          "oklch(72% 0.0987 28.55)",
+          "oklch(84% 0.0987 28.55)",
+          "oklch(95% 0.0987 28.55)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Map title",
+        "purpose": "Map heading, with a smaller narrow-screen size."
+      },
+      "title": {
+        "displayName": "Section heading",
+        "purpose": "Inspector tool section headings."
+      },
+      "body": {
+        "displayName": "Body and control",
+        "purpose": "Inherited browser interface text."
+      },
+      "label": {
+        "displayName": "Control label",
+        "purpose": "Common compact buttons and board labels."
+      },
+      "supporting": {
+        "displayName": "Solver guidance",
+        "purpose": "Solver status and next-step text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "board",
+        "value": "0 18px 38px #0008",
+        "purpose": "Diffuse depth behind the original artwork grid."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background .16s, border-color .16s, transform .16s",
+        "purpose": "Button state transitions."
+      },
+      {
+        "name": "changed-cell",
+        "value": "push-in .23s cubic-bezier(.16,1,.3,1)",
+        "purpose": "Brightness and scale cue for changed engine-frame cells."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto !important",
+        "purpose": "User preference removes interface motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "large-arena",
+        "value": "1450px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "single-column",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shipped browser action variant.",
+      "html": "<button class=\"ds-primary\">Solve & play</button>",
+      "css": ".ds-primary{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;background:var(--accent,#ff794d);color:var(--on-accent,#19100c);font-weight:600;}.ds-primary:hover{background:#ff956f;}.ds-primary:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-primary:active:not(:disabled){transform:translateY(1px)}.ds-primary:disabled{cursor:default;opacity:.4}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Shipped browser action variant.",
+      "html": "<button class=\"ds-secondary\">Save map</button>",
+      "css": ".ds-secondary{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;background:var(--raised,#21252e);border-color:var(--border,#343945);color:var(--text,#f7f8fb);}.ds-secondary:hover{background:#2d3340;}.ds-secondary:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-secondary:active:not(:disabled){transform:translateY(1px)}.ds-secondary:disabled{cursor:default;opacity:.4}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Shipped browser action variant.",
+      "html": "<button class=\"ds-quiet\">Import JSON</button>",
+      "css": ".ds-quiet{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;background:transparent;color:var(--muted,#aeb7c8);}.ds-quiet:hover{background:var(--raised,#21252e);color:var(--text,#f7f8fb);}.ds-quiet:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-quiet:active:not(:disabled){transform:translateY(1px)}.ds-quiet:disabled{cursor:default;opacity:.4}@media(prefers-reduced-motion:reduce){.ds-quiet{transition:none}}"
+    },
+    {
+      "name": "Solver Select",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Full-width inspector field with local search choices.",
+      "html": "<label class=\"ds-field-label\">Find a solution with<select class=\"ds-field\"><option>A* \u00b7 Lowest movement cost</option><option>IDS \u00b7 Fewest pushes</option><option>Random \u00b7 Explore legal moves</option></select></label>",
+      "css": ".ds-field-label{font-family:Plex,system-ui,sans-serif;font-size:16px;display:grid;gap:8px;color:var(--muted,#aeb7c8);font-size:13px}.ds-field{font-family:Plex,system-ui,sans-serif;font-size:16px;font-size:13px;min-height:44px;background:var(--raised,#21252e);border:1px solid var(--border,#343945);border-radius:8px;color:var(--text,#f7f8fb);padding:0 30px 0 12px;cursor:pointer}.ds-field:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}"
+    },
+    {
+      "name": "Workspace Modes",
+      "kind": "nav",
+      "description": "Editor and Playback pressed-state navigation.",
+      "html": "<nav class=\"ds-modes\" aria-label=\"Workspace\"><button aria-pressed=\"true\">Editor</button><button aria-pressed=\"false\">Playback</button></nav>",
+      "css": ".ds-modes{display:inline-flex;gap:4px;background:#1c2029;border-radius:9px;padding:4px}.ds-modes button{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;min-height:36px;padding:0 18px;font-size:14px;background:transparent;color:var(--muted,#aeb7c8)}.ds-modes button[aria-pressed=true]{background:#343b49;color:var(--text,#f7f8fb)}.ds-modes button:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-modes button:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Inspector",
+      "kind": "card",
+      "refersTo": "inspector",
+      "description": "Quiet container for named tool sections.",
+      "html": "<section class=\"ds-inspector\"><h2>Build your board</h2><p>Choose a tile, then paint the grid.</p></section>",
+      "css": ".ds-inspector{font-family:Plex,system-ui,sans-serif;font-size:16px;background:var(--surface,#161920);border-radius:var(--radius,12px);padding:22px 20px;color:var(--text,#f7f8fb)}.ds-inspector h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.015em}.ds-inspector p{margin:7px 0 0;font-size:14px;line-height:1.55;color:var(--muted,#aeb7c8)}"
+    },
+    {
+      "name": "Playback Button",
+      "kind": "button",
+      "refersTo": "button-play",
+      "description": "High-contrast icon control for playback; source path is inlined.",
+      "html": "<button class=\"ds-play\" aria-label=\"Play solution\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m8 5 11 7-11 7Z\"/></svg></button>",
+      "css": ".ds-play{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;width:44px;padding:0;background:var(--text,#f7f8fb);color:var(--bg,#0c0e13)}.ds-play svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-play:hover{background:#ffd1bd}.ds-play:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-play:active:not(:disabled){transform:translateY(1px)}.ds-play:disabled{cursor:default;opacity:.4}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Textured Puzzle Workspace",
+    "overview": "The Textured Puzzle Workspace places the original saturated puzzle artwork inside a dark, sleek control surface. Grass, water, lava, wood and stone supply the visual character; the interface uses quiet charcoal layers, readable labels and warm orange actions to make the artwork easy to inspect.\n\nThis records the shipped local browser interface. It replaces the rejected washed-out geometric presentation. Original raster textures and directional sprites remain the source of identity; the optional desktop interface is a separate retained presentation, not the source of these browser tokens.",
+    "keyCharacteristics": [
+      "Original texture artwork remains prominent and unchanged.",
+      "Compact charcoal controls frame vivid puzzle imagery.",
+      "IBM Plex Sans labels and tabular metrics support inspection.",
+      "Orange identifies actions, selections and keyboard focus."
+    ],
+    "rules": [
+      {
+        "name": "The Original Artwork Rule",
+        "body": "Use the supplied raster textures for puzzle tiles and artwork previews; preserve their bytes and their saturated character.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Accent Rule",
+        "body": "Orange marks primary actions, selected tools and keyboard focus; green reports positive status and pale coral reports errors.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Control Rule",
+        "body": "Use the bundled Plex face for browser controls; retain visible focus and text labels beside artwork choices.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do preserve original tile and directional sprite files byte-for-byte.",
+      "Do pair artwork previews with accessible names and pressed states.",
+      "Do maintain the visible orange focus outline and the board\u2019s keyboard navigation.",
+      "Do use truthful solver and playback messages based on the current engine result.",
+      "Do disable motion under the user\u2019s reduced-motion preference."
+    ],
+    "donts": [
+      "Don't replace the original textures with washed-out geometric tiles.",
+      "Don't use texture thumbnails as the only accessible label for a control.",
+      "Don't report a board as cleared while boxes remain.",
+      "Don't carry stale completion or solver results into an edited board."
+    ]
+  }
+}

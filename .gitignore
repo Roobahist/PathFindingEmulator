@@ -11,3 +11,7 @@ dist/
 .DS_Store
 # User-created maps; the original tracked maps remain versioned.
 maps/*.json
+
+# Local design captures and discarded question rounds.
+.impeccable/review/
+.impeccable/questions/

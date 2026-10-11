@@ -252,3 +252,18 @@ interface uses neutral light surfaces, thin separators, small corner radii,
 compact typography and direct labels. Launcher choices are plain rows beside
 an actual bundled sample board. Editing tools and solver statistics use aligned
 lists. The four README screenshots were recaptured from this version.
+
+## Browser interface follow-up
+
+The default entry point now opens a local HTML/CSS/JavaScript workspace, using
+the original four textured themes and directional sprites. The engine and stored
+map formats remain unchanged. Pygame is an optional `desktop` installation extra
+and `--desktop` keeps the existing interface. Browser tools include free painting,
+undo, keyboard editing, JSON import/save, themed boards and solution playback.
+No frontend build system or browser runtime dependency was added.
+
+The loopback server serves packaged assets and bounded JSON requests. Integration
+tests cover static files, fonts, library access, creation, validation, exclusive
+saves, rejected foreign origins, unsolvable boards, and replay/engine scoring
+parity. Installed-wheel checks exercise the browser server without Pygame. Real
+browser screenshots replace the older README images.

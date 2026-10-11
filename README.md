@@ -1,44 +1,44 @@
 # PathFinding Emulator
 
-A desktop puzzle editor and simulator for pushing boxes into holes. Design a
-board, generate a seeded random board, or load one of the 14 original maps;
-then watch an agent clear the boxes while the simulator tracks movement cost.
-The four original artwork themes remain available.
+A local browser puzzle editor and simulator with the original textured artwork.
+Paint a board, open one of 14 sample maps, and watch boxes move into holes while
+tracking movement cost. The Python engine still owns every puzzle rule.
 
-## A modern desktop workspace
+## The browser workspace
 
-A restrained desktop interface pairs a centered puzzle board with clear editing
-controls and live run statistics. These are **actual screenshots of the Pygame
-application**, captured from the screens in this repository.
+The grass, water, lava, rock and crate textures are the project's original assets.
+Switch artwork without changing the puzzle. These images show the **running app**,
+including an actual solver frame, rather than design mockups.
 
-![Launcher with three puzzle workflows](docs/screenshots/launcher.png)
+![Browser editor with original grass and water textures](docs/screenshots/web-editor.jpg)
 
-| Configure a board | Edit the puzzle |
+| Lava artwork | Inspect a solution |
 |---|---|
-| ![Custom board settings](docs/screenshots/setup.png) | ![Editor with tile palette and remaining counts](docs/screenshots/editor.png) |
+| ![Original lava and chest textures in the editor](docs/screenshots/web-lava.jpg) | ![Paused solution with directional sprite, cost and timeline](docs/screenshots/web-playback.jpg) |
 
-![Solver showing movement cost, actions, remaining boxes, and speed controls](docs/screenshots/solver.png)
-
-Regenerate the screenshots after UI changes with
-`python -m tools.capture_screenshots` from the repository root. The capture uses
-Pygame's display-independent driver and does not require a desktop session.
+The interface adapts to narrow windows and provides keyboard board editing,
+undo, live artwork previews, pause, step, reset and timeline scrubbing.
+See [screenshot capture notes](docs/screenshots/README.md).
 
 ## Setup and run
 
-Use **Python 3.11–3.13**. Python 3.12 is recommended. A desktop display is needed
-for the GUI; headless simulations and core tests do not import Pygame.
-The pinned Pygame release has no Python 3.14 macOS wheel.
+Use **Python 3.11–3.13**. The browser app needs no third-party runtime packages.
+From the repository directory:
 
 ```sh
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python Main.py
+python3.12 Main.py
 ```
 
-On Windows, use `py -3.12 -m venv .venv`, then `.venv\Scripts\Activate.ps1`.
-Alternatively, install the package with `python -m pip install .` and launch
+On Windows: `py -3.12 Main.py`. This starts the local server at
+`http://127.0.0.1:8765` and opens your browser. Keep that process running while
+using the app; Ctrl+C stops it. If the port is occupied, use `--port 0` to choose
+a free port. `--no-browser` starts it without opening a tab.
+
+For an installed command, run `python -m pip install .`, then
 `pathfinding-emulator`. `python -m pathfinding_emulator` also works.
+For the optional Pygame interface, install `python -m pip install '.[desktop]'`
+(or `-r requirements.txt`) and launch with `--desktop`. Pygame is not imported
+by browser or headless runs.
 
 Run a sample without a display:
 
@@ -73,24 +73,28 @@ No-solution and resource-limit errors are distinct. A limit means solvability
 is unknown. Large boards can require substantial search time and memory.
 Random generation is bounded and does **not** guarantee solvability.
 
-## Desktop workflow
+## Browser workflow
 
-Choose Load a board, Random board, or Design a board. Dimensions on both creation
-screens mean **interior cells**. Artwork styles are 0–3. The GUI supports up to
-20 × 20 interior cells and scales tiles to the desktop where possible.
-Headless boards support up to 100 × 100.
+Open a sample from the map library, import a JSON grid, or create an empty or
+random board. Dimensions mean **interior cells**, up to 20 × 20. Select a tile
+and click or drag to paint; right-click erases. Borders stay holes or stones.
+Undo restores the previous edit. Save map creates a new JSON file in `--maps-dir`.
+There are no tile quotas in the browser editor.
 
-In the editor, select a tile type and place the displayed remaining tiles.
-Click an existing tile to remove it and return it to the quota. Stones may also
-replace border holes. Save JSON creates a new file; Solve board starts the selected
-agent. The solver’s minus/plus buttons adjust delay; Return to editor returns
-to the original edited board. Completed and failed runs report their status.
+Choose Random, A* or IDS, then Solve & play. Pause, step forward, reset, or scrub
+through the real solution frames. Pace adjusts the time between pushes. Returning
+to Editor restores the original edited board; editing discards the old solution.
+Search and replay are bounded; errors explain when a board is unsolvable or a
+limit prevents finding a solution. The smaller maps 10–12 are quick starting points.
 
-Keyboard support: 1/2/3 chooses a launcher workflow, Tab focuses setup inputs,
-Enter submits a form or completed
-editor, Escape returns to the previous screen, and H/S/B selects hole/stone/box
-in the editor. Minus/plus adjusts solver delay. Board placement still requires a mouse; full keyboard editing
-and screen-reader accessibility are not implemented.
+Keyboard: Tab enters the board, arrow keys choose a cell, Space/Enter paints,
+Delete/Backspace erases, H/S/B/E selects hole/stone/box/floor, Ctrl/Cmd+Z undoes,
+and Escape returns to editing. Controls have accessible labels and visible focus;
+reduced-motion preferences remove tile flashes.
+
+The optional desktop interface retains its launcher, setup fields and tile quotas.
+Its H/S/B palette shortcuts, Escape navigation and minus/plus delay controls remain.
+Headless generation supports up to 100 × 100 interior cells.
 
 ## Configuration
 
@@ -99,15 +103,18 @@ variables or configuration files. Settings are validated once at startup.
 
 | Argument | Default | Meaning |
 |---|---|---|
-| `--headless` | off | Simulate without GUI imports |
+| `--headless` | off | Simulate without browser or Pygame |
+| `--desktop` | off | Open the optional Pygame interface |
+| `--no-browser` | off | Start the browser server without opening a tab |
+| `--port` | 8765 | Loopback HTTP port; 0 chooses a free port |
 | `--map` | none | File path or bundled sample name |
 | `--height`, `--width` | 2, 2 | Interior size when generating a headless board |
 | `--maps-dir` | `maps` in the launch directory | Directory for new JSON maps |
 | `--algorithm` | `random` | `random`, `A_Star`, or `IDS` |
 | `--seed` | system randomness | Reproducible generation and random agent choices |
-| `--cell-size` | 50 | Requested GUI tile size, 20–100 pixels |
+| `--cell-size` | 50 | Requested Pygame tile size, 20–100 pixels |
 | `--delay` | 1 | Seconds between actions, 0–99 |
-| `--fps` | 60 | Positive GUI frame-rate cap |
+| `--fps` | 60 | Positive Pygame frame-rate cap |
 | `--max-steps` | 10000 | Maximum executed simulation actions |
 | `--max-nodes` | 50000 | Maximum expanded search states |
 | `--max-depth` | 100 | Maximum IDS action depth |
@@ -125,8 +132,10 @@ New saves are validated, human-readable JSON and use exclusive creation to avoid
 overwriting an existing map. Original `.pickle` files remain unchanged. Legacy
 loads accept only list/integer/memo opcodes, reject Python object construction,
 limit memo indices, and enforce a 1 MiB file limit and board-size validation.
-Use JSON when exchanging maps. There are no credentials, network services,
-databases, or migrations.
+Use JSON when exchanging maps. There are no credentials, cloud services, databases or migrations. The browser
+uses a local HTTP server bound only to 127.0.0.1. It serves bundled files, restricts
+map access to library names, validates JSON requests and rejects foreign origins
+for writes. API requests are capped at 1 MiB; replay size is also bounded.
 
 `Main.py` and legacy class imports remain available through small compatibility
 modules. See [architecture and compatibility](docs/architecture.md) for path
@@ -148,14 +157,15 @@ python -m pip_audit -r requirements.txt --disable-pip --no-deps
 
 Tests exercise simulator scoring, all 2×2 interior tile arrangements for both
 searches, map security and concurrency, seeded generation, CLI failures, and
-real Pygame screens with SDL dummy drivers. GUI tests skip explicitly if Pygame
-is unavailable. The runtime has one exactly pinned dependency; the development
+HTTP endpoints, replay/engine parity, static browser assets, exclusive saves,
+and real Pygame screens with SDL dummy drivers. GUI tests skip explicitly if Pygame
+is unavailable. The optional desktop extra has one exactly pinned dependency; the development
 lock includes resolved tooling dependencies. No external test service is needed.
 
 CI checks Python 3.11 on Linux and 3.13 on Windows, including packaging, an
 installed-wheel smoke test, and dependency auditing. Dependency updates are
 proposed through Dependabot pull requests; releases are not published
-automatically. This is a local desktop application, so Docker and deployment
+automatically. This is a local application, so Docker and deployment
 infrastructure are omitted.
 
 ## Architecture and ownership
@@ -163,11 +173,14 @@ infrastructure are omitted.
 `pathfinding_emulator/environment.py` owns rules and scoring; `maps.py` owns
 validation/persistence/generation; `agents.py` owns bounded planning; `app.py`
 assembles settings, random sources and perception callbacks and runs the UI or
-headless simulation. `ui/` contains Pygame presentation and shared tile rendering.
+headless simulation. `web_server.py` adapts the engine over local HTTP; `web/`
+contains the HTML/CSS/JS browser workspace. `ui/` retains Pygame presentation.
 Tests live in `tests/`; assets and sample maps are bundled with the package.
 `other_agents.py` retains educational experimental policies with injected
 randomness; these policies are not selected by the supported launcher.
 
 Read [architecture](docs/architecture.md), [modernization report](docs/modernization.md),
 and [agent guidance](AGENTS.md). No license was present in the original repository;
-this modernization does not infer licensing rights for code or artwork.
+this modernization does not infer licensing rights for code or artwork. The
+bundled IBM Plex Sans font includes its SIL Open Font License in
+`pathfinding_emulator/assets/fonts/LICENSE.txt`.

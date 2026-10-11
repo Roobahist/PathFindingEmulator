@@ -16,6 +16,14 @@ with zipfile.ZipFile(wheels[0]) as archive:
     names = archive.namelist()
     assert sum(name.endswith(".pickle") for name in names) == 14
     assert sum(name.endswith((".png", ".jpg")) for name in names) == 37
+    for asset in (
+        "web/index.html",
+        "web/styles.css",
+        "web/app.js",
+        "assets/fonts/IBMPlexSans-Regular.ttf",
+        "assets/fonts/LICENSE.txt",
+    ):
+        assert "pathfinding_emulator/" + asset in names
 with tempfile.TemporaryDirectory() as directory:
     check_dir = Path(directory)
     venv.EnvBuilder(with_pip=True).create(check_dir / "venv")
@@ -49,6 +57,32 @@ with tempfile.TemporaryDirectory() as directory:
         cwd=directory,
         env=env,
     )
+    browser_check = """
+import json
+import threading
+from pathlib import Path
+from urllib.request import urlopen
+from pathfinding_emulator.config import Settings
+from pathfinding_emulator.maps import ChallengeDesigner
+from pathfinding_emulator.web_server import make_server
+server = make_server(Settings(maps_dir=Path('saved')), ChallengeDesigner(Path('saved')))
+thread = threading.Thread(target=server.serve_forever, daemon=True)
+thread.start()
+try:
+    url = f'http://127.0.0.1:{server.server_port}'
+    for asset in ('/', '/app.js', '/styles.css', '/assets/env/3/box.jpg', '/assets/fonts/IBMPlexSans-Regular.ttf'):
+        with urlopen(url + asset) as response:
+            assert response.status == 200 and response.read()
+    with urlopen(url + '/api/bootstrap') as response:
+        assert len(json.load(response)['grid']) == 7
+finally:
+    server.shutdown()
+    server.server_close()
+    thread.join()
+"""
+    subprocess.run(
+        [str(python), "-c", browser_check], check=True, cwd=directory, env=env
+    )
     subprocess.run(
         [
             str(python),
@@ -60,5 +94,5 @@ with tempfile.TemporaryDirectory() as directory:
         env=env,
     )
 print(
-    "Installed-wheel CLI, compatibility imports, samples, artwork, and GUI smoke checks passed"
+    "Installed-wheel CLI, compatibility imports, samples, artwork, browser server, and GUI smoke checks passed"
 )

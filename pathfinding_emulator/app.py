@@ -274,6 +274,20 @@ def parser():
     result.add_argument(
         "--algorithm", choices=("random", "A_Star", "IDS"), default="random"
     )
+    result.add_argument(
+        "--desktop", action="store_true", help="Use the legacy Pygame interface"
+    )
+    result.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Start the browser workspace without opening a tab",
+    )
+    result.add_argument(
+        "--port",
+        type=int,
+        default=8765,
+        help="Local browser port; 0 chooses a free port",
+    )
     result.add_argument("--seed", type=int)
     result.add_argument("--cell-size", type=int, default=50)
     result.add_argument(
@@ -302,8 +316,14 @@ def main(argv=None):
                 designer.create_random_map(1, 1, args.height, args.width)
             env, steps = run_headless(designer.mapArr, settings, designer.rng)
             print(f"Solved: {steps} actions, total cost {env.send_cost()}")
-        else:
+        elif args.desktop:
             run_gui(settings, designer, designer.mapArr)
+        else:
+            from .web_server import run_web
+
+            if not 0 <= args.port <= 65535:
+                raise ValueError("Port must be between 0 and 65535")
+            run_web(settings, designer, designer.mapArr, args.port, not args.no_browser)
         return 0
     except (OSError, ValueError, SearchLimitError) as error:
         logger.error("%s", error)

@@ -11,7 +11,12 @@ flowchart LR
     APP --> MAPS[maps.py ChallengeDesigner]
     APP --> AGENTS[agents.py bounded agents]
     APP --> ENV[environment.py Env / State]
-    APP --> UI[ui/ Pygame screens]
+    APP --> WEB[web_server.py local HTTP]
+    WEB --> FRONT[web/ HTML CSS JS]
+    WEB --> ENV
+    WEB --> AGENTS
+    WEB --> MAPS
+    APP --> UI[ui/ optional Pygame screens]
     AGENTS --> ENV
     MAPS --> ENV
     UI --> TILES[ui/tiles.py theme rendering]
@@ -26,13 +31,18 @@ designer and returns the updated board. Saving belongs to the designer rather
 than the UI. Starting a solver copies the editor's board into `Env`, and supplies
 `Env.send_map` to the agent. Search expansion uses copied environments and their
 own scoring history. Each action is replayed by the same environment transition
-before Pygame renders it.
+before either presentation renders it.
 
 The main GUI loop owns setup/editor/solver navigation. Search yields after each
 expansion so the loop can work within an approximately 8 ms planning budget per
 frame; a single expansion may exceed that budget. Animation pumps input events;
 returning to the editor discards the simulation copy, keeping the edited board.
-There are no worker threads or background services.
+This cooperative loop applies to the optional Pygame interface. The default
+browser workspace uses a loopback ThreadingHTTPServer; each solve request gets
+its own environment and agent, returning bounded replay frames. JavaScript
+paints and scrubs these frames without implementing movement or scoring. Editing
+while a solve is pending discards its result; the bounded server work finishes
+independently. The browser presentation has no package dependencies.
 
 ## Path changes
 
