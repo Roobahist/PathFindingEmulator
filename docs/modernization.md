@@ -127,7 +127,8 @@ nonnegative delay, rendering a previously updated state, and design/edit/save/
 solve/back/quit with actual screen classes. Screenshots were inspected; form
 labels were aligned to avoid overlaps. The initial hosted Windows run found that
 a test tried to remove its active working directory. The fixture now restores
-the working directory before temporary-directory cleanup. Tests run without external APIs.
+the working directory before temporary-directory cleanup. The installed-wheel
+assertion also canonicalizes both paths to account for Windows short-path aliases. Tests run without external APIs.
 The wheel smoke uses the already installed Pygame runtime for rendering while
 loading application code/artwork/samples exclusively from its temporary wheel
 installation. It does not silently rely on source package paths.

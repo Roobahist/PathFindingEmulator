@@ -53,7 +53,7 @@ with tempfile.TemporaryDirectory() as directory:
         [
             str(python),
             "-c",
-            f"import sys; sys.path.append({sysconfig.get_path('platlib')!r}); from pathlib import Path; import pygame as pg; import pathfinding_emulator as package; from MainGui import GUI; from MapEditor import MapEditor; from Env import Env; from GuiSolver import Solver; from Utils import base_map; assert Path(package.__file__).is_relative_to(Path('venv').resolve()); pg.init(); GUI(); grid=base_map(2,2); MapEditor(map=grid); Solver(50,0,Env(grid).state); pg.quit()",
+            f"import sys; sys.path.append({sysconfig.get_path('platlib')!r}); from pathlib import Path; import pygame as pg; import pathfinding_emulator as package; from MainGui import GUI; from MapEditor import MapEditor; from Env import Env; from GuiSolver import Solver; from Utils import base_map; assert Path(package.__file__).resolve().is_relative_to(Path('venv').resolve()); pg.init(); GUI(); grid=base_map(2,2); MapEditor(map=grid); Solver(50,0,Env(grid).state); pg.quit()",
         ],
         check=True,
         cwd=directory,
