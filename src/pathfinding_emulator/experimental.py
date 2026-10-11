@@ -1,4 +1,4 @@
-"""Historical educational policies; the supported launcher uses ai.Agent.
+"""Historical educational policies; the supported launcher uses agents.Agent.
 
 These stochastic policies intentionally include ineffective pushes. They do
 not guarantee completion; perception and randomness can be supplied for study.
@@ -7,7 +7,7 @@ not guarantee completion; perception and randomness can be supplied for study.
 import random
 from math import exp
 
-from ai import Action
+from .agents import Action
 
 
 class AgentInspiration:

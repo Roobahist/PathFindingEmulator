@@ -46,7 +46,7 @@ adding bounded execution and a CLI. Tests/docs/tooling are counted separately.
 The final application is a small package with direct dependencies:
 `environment` owns rules/scoring, `maps` owns storage/generation, `agents` owns
 planning, `config` owns validated settings, and `app` assembles dependencies and
-coordinates execution. Pygame remains in `ui/`; headless execution does not import
+coordinates execution. Pygame remains in `desktop/`; headless execution does not import
 it. No DI framework, service locator, database, or plugin system was introduced.
 
 Both searches replay the same environment transitions. Uniform-cost search uses
@@ -59,7 +59,7 @@ No-solution, resource-limit, and exhausted-plan outcomes are distinguished.
 
 Source moved into `pathfinding_emulator/` with conventional snake_case names.
 Root files remain concise compatibility imports or launchers. Artwork moved into
-`pathfinding_emulator/assets/`; all 37 files match their original bytes.
+`src/pathfinding_emulator/assets/`; all 37 files match their original bytes.
 Original `maps/` files remain unchanged, and 2,566 bytes of samples are copied
 into the package for installed distributions. The complete old-to-new mapping
 is in [architecture.md](architecture.md).
@@ -271,3 +271,7 @@ browser screenshots replace the older README images.
 ## Solver and viewport refinements
 
 Added BFS (fewest pushes), DFS and greedy search with bounded expansion and replay parity. Inset browser select chevrons by 14px and replaced the old hand pointer with a large SVG direction arrow. At 1000 × 700 or larger, the desktop workspace fits one viewport height; exact board width and height preserve square cells for tall and wide maps. Smaller screens retain scrolling. All five deterministic planners are exercised on every 2 × 2 tile arrangement; 40 tests pass.
+
+## Repository structure cleanup
+
+Moved production source under `src/pathfinding_emulator`, grouped browser server/static files, renamed the optional `ui` package to `desktop` with launcher/editor modules, isolated installed legacy import shims under `compat`, and renamed educational policies to `experimental.py`. Original samples have a single canonical copy and user saves stay in ignored `maps/`. Tile directories now have semantic theme names. Legacy launch and installed imports are checked alongside wheel packaging.

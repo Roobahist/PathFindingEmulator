@@ -31,9 +31,9 @@ class UITests(unittest.TestCase):
         pg.quit()
 
     def test_all_themes_and_screens_load_from_any_directory(self):
-        from pathfinding_emulator.ui.main_gui import GUI
-        from pathfinding_emulator.ui.map_editor import MapEditor
-        from pathfinding_emulator.ui.solver import Solver
+        from pathfinding_emulator.desktop.editor import MapEditor
+        from pathfinding_emulator.desktop.launcher import GUI
+        from pathfinding_emulator.desktop.solver import Solver
 
         original = Path.cwd()
         with tempfile.TemporaryDirectory() as directory:
@@ -54,7 +54,7 @@ class UITests(unittest.TestCase):
                 os.chdir(original)
 
     def test_keyboard_navigation_and_path_input(self):
-        from pathfinding_emulator.ui.main_gui import GUI
+        from pathfinding_emulator.desktop.launcher import GUI
 
         gui = GUI()
         gui.user_click(
@@ -71,7 +71,7 @@ class UITests(unittest.TestCase):
         self.assertEqual(gui.which_page, 0)
 
     def test_solver_can_render_an_already_updated_state(self):
-        from pathfinding_emulator.ui.solver import Solver
+        from pathfinding_emulator.desktop.solver import Solver
 
         grid = base_map(2, 2)
         grid[1][1] = 1
@@ -81,7 +81,7 @@ class UITests(unittest.TestCase):
         solver.redrawPage(env.state)
 
     def test_delay_cannot_go_negative(self):
-        from pathfinding_emulator.ui.solver import Solver
+        from pathfinding_emulator.desktop.solver import Solver
 
         solver = Solver(50, 0, Env(base_map(2, 2)).state)
         solver.user_click(
@@ -90,7 +90,7 @@ class UITests(unittest.TestCase):
         self.assertEqual(float(solver.delayinput.text), 0)
 
     def test_centered_board_hit_testing_and_panel_bounds(self):
-        from pathfinding_emulator.ui.map_editor import MapEditor
+        from pathfinding_emulator.desktop.editor import MapEditor
 
         editor = MapEditor(map=base_map(2, 2), B=1)
         editor.active_buttons[2] = True
@@ -106,8 +106,8 @@ class UITests(unittest.TestCase):
         self.assertFalse(editor.board_rect.colliderect(editor.sidebar))
 
     def test_numeric_map_name_and_solver_keyboard_speed(self):
-        from pathfinding_emulator.ui.main_gui import GUI
-        from pathfinding_emulator.ui.solver import Solver
+        from pathfinding_emulator.desktop.launcher import GUI
+        from pathfinding_emulator.desktop.solver import Solver
 
         gui = GUI()
         gui.which_page = 1
@@ -121,7 +121,7 @@ class UITests(unittest.TestCase):
         self.assertEqual(float(solver.delayinput.text), 98.75)
 
     def test_design_edit_save_solve_back_and_quit(self):
-        from pathfinding_emulator.ui.main_gui import GUI
+        from pathfinding_emulator.desktop.launcher import GUI
 
         class DesignGUI(GUI):
             def __init__(self, *args, **kwargs):
@@ -130,7 +130,7 @@ class UITests(unittest.TestCase):
                 self.inputs[3] = [1, 1, 2, 2, 1, 0, 0]
                 self.Done = True
 
-        from pathfinding_emulator.ui.map_editor import MapEditor
+        from pathfinding_emulator.desktop.editor import MapEditor
 
         editors = []
 
@@ -180,8 +180,8 @@ class UITests(unittest.TestCase):
             settings = Settings(maps_dir=Path(directory), algorithm="A_Star", delay=0)
             designer = ChallengeDesigner(directory)
             with (
-                patch("pathfinding_emulator.ui.main_gui.GUI", DesignGUI),
-                patch("pathfinding_emulator.ui.map_editor.MapEditor", TrackingEditor),
+                patch("pathfinding_emulator.desktop.launcher.GUI", DesignGUI),
+                patch("pathfinding_emulator.desktop.editor.MapEditor", TrackingEditor),
                 patch.object(pg.event, "get", events),
             ):
                 run_gui(settings, designer)

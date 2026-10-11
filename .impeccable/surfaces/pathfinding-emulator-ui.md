@@ -1,8 +1,8 @@
 ---
 version: 1
 slug: "pathfinding-emulator-ui"
-primary_target: "pathfinding_emulator/web/index.html"
-related_targets: ["pathfinding_emulator/web/styles.css", "pathfinding_emulator/web/app.js"]
+primary_target: "src/pathfinding_emulator/browser/static/index.html"
+related_targets: ["src/pathfinding_emulator/browser/static/styles.css", "src/pathfinding_emulator/browser/static/app.js"]
 ---
 
 # Textured browser puzzle workspace

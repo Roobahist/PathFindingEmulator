@@ -18,13 +18,16 @@ dev = ["ruff==0.17.0", "build==1.6.1", "pip-audit==2.10.1"]
 pathfinding-emulator = "pathfinding_emulator.app:main"
 
 [tool.setuptools]
+package-dir = {"" = "compat", pathfinding_emulator = "src/pathfinding_emulator"}
 py-modules = ["Main", "Env", "MapLoader", "Utils", "ai", "Astarr", "simpids", "MainGui", "MapEditor", "GuiSolver", "other_agents"]
 
 [tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
 include = ["pathfinding_emulator*"]
 
 [tool.setuptools.package-data]
-pathfinding_emulator = ["web/*.svg", "web/*.html", "web/*.css", "web/*.js", "assets/fonts/*.ttf", "assets/fonts/*.txt", "assets/*.png", "assets/env/*/*.jpg", "assets/agent/*/*.png", "sample_maps/*.pickle"]
+pathfinding_emulator = ["browser/static/*.svg", "browser/static/*.html", "browser/static/*.css", "browser/static/*.js", "assets/fonts/*.ttf", "assets/fonts/*.txt", "assets/*.png", "assets/tiles/*/*.jpg", "assets/pointers/*/*.png", "sample_maps/*.pickle"]
 
 [tool.ruff]
 target-version = "py311"

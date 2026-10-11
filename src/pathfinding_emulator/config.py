@@ -9,6 +9,7 @@ from .agents import ALGORITHMS
 PACKAGE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = PACKAGE_DIR / "assets"
 SAMPLE_MAPS_DIR = PACKAGE_DIR / "sample_maps"
+ARTWORK_THEMES = ("classic", "wood_stone", "lava", "grass_water")
 
 
 @dataclass(frozen=True)

@@ -1,5 +1,5 @@
 """Compatibility import for the simulation screen."""
 
-from pathfinding_emulator.ui.solver import Solver
+from pathfinding_emulator.desktop.solver import Solver
 
 __all__ = ["Solver"]

@@ -2,14 +2,15 @@
 
 - This is a local browser box-pushing puzzle editor and simulator, with an optional Pygame interface. Python 3.11–3.13
   is supported for installation; prefer 3.12 during development.
-- `pathfinding_emulator/environment.py` owns movement/scoring. `maps.py` owns
+- `src/pathfinding_emulator/environment.py` owns movement/scoring. `maps.py` owns
   storage and generation. `agents.py` plans through environment transitions.
-  `app.py` is the composition root; `ui/` must not be imported by core code.
-  `web_server.py` adapts the same engine; `web/` contains the browser presentation.
+  `app.py` is the composition root; `desktop/` must not be imported by core code.
+  `browser/server.py` adapts the same engine; `browser/static/` contains the browser presentation.
 - Keep one movement/scoring implementation. Search identity must include the
   continuation cell/direction and prior chain length, not only box locations.
 - Tile values -2/-1/0/1 and `(row, column, direction)` are compatibility contracts.
-  Preserve original maps and artwork. Root modules are compatibility imports.
+  Preserve original maps and artwork. Legacy import shims live in `compat/`; only `Main.py` remains as a root launcher.
+  Core source lives under `src/pathfinding_emulator/`.
 - Use snake_case for new APIs. Preserve legacy Pygame class/member names used by
   compatibility imports unless a migration is documented.
 - Operational options belong in validated `Settings`; inject perception callbacks

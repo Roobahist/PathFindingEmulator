@@ -20,223 +20,223 @@
   ],
   "original_artwork": [
     {
-      "path": "pathfinding_emulator/assets/agent/0/down.png",
+      "path": "src/pathfinding_emulator/assets/pointers/0/down.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/0/down.png",
       "sha256": "11b0ad992391e157c5071a769945b0b707db4fb1c0a37739b98c8f88e9d4bc2f",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/0/left.png",
+      "path": "src/pathfinding_emulator/assets/pointers/0/left.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/0/left.png",
       "sha256": "7ddaf81b6a3e546e755383aa3ff5d017f66f2f5eef85f20eda1c6984a06411b3",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/0/right.png",
+      "path": "src/pathfinding_emulator/assets/pointers/0/right.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/0/right.png",
       "sha256": "c68523fd7155447e91710c88204d45024a9bc1153a30a977751efb6e2c2e4ae3",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/0/up.png",
+      "path": "src/pathfinding_emulator/assets/pointers/0/up.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/0/up.png",
       "sha256": "90462aba8edff7b5e2643a506b8d7dbc794d0ca9da8560c6b52528aee2680d16",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/1/down.png",
+      "path": "src/pathfinding_emulator/assets/pointers/1/down.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/1/down.png",
       "sha256": "1b9978e0f0554199137424e85e06dd9f08f31a2fceeb267522c9ea18b5843393",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/1/left.png",
+      "path": "src/pathfinding_emulator/assets/pointers/1/left.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/1/left.png",
       "sha256": "e18a41b29eb449eab525bfcd48ab64f56d8fe2f15f9f2f93d0edb104a5ddf7c5",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/1/right.png",
+      "path": "src/pathfinding_emulator/assets/pointers/1/right.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/1/right.png",
       "sha256": "4d6ade25906986fcfc90216a6587d37246208708e0138eade4adf167efd3b8a6",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/1/up.png",
+      "path": "src/pathfinding_emulator/assets/pointers/1/up.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/1/up.png",
       "sha256": "74745512a1cce7be3a0a81b322c477cee347c9a724b5aefb872ab64bfd1c69cf",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/2/down.png",
+      "path": "src/pathfinding_emulator/assets/pointers/2/down.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/2/down.png",
       "sha256": "01fc97a8abf347190d03bbfbec5e6bcd2a95aaac76f4937cf4973b7c229540d1",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/2/left.png",
+      "path": "src/pathfinding_emulator/assets/pointers/2/left.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/2/left.png",
       "sha256": "5dfcb520c0f32757793500c0b1a309b84ba266999a20d1531a136227837524fc",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/2/right.png",
+      "path": "src/pathfinding_emulator/assets/pointers/2/right.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/2/right.png",
       "sha256": "70efadfd244678938c3b41d1ac20d87c32dd2a5d92068b4baa58ed0e6e5844f0",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/2/up.png",
+      "path": "src/pathfinding_emulator/assets/pointers/2/up.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/2/up.png",
       "sha256": "9044d85322beb322f78d3ccae04c6f2173b7c650286e0949f78aa3bef2646a71",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/3/down.png",
+      "path": "src/pathfinding_emulator/assets/pointers/3/down.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/3/down.png",
       "sha256": "030319b3a2251c7255e3e87d95042b256839a816b109b29d356050070f6b7fa1",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/3/left.png",
+      "path": "src/pathfinding_emulator/assets/pointers/3/left.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/3/left.png",
       "sha256": "7b834cc900e7b0e6f8bbaa89f7ad0b5af7b69bfde68c6f884281e5b9a86558de",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/3/right.png",
+      "path": "src/pathfinding_emulator/assets/pointers/3/right.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/3/right.png",
       "sha256": "26a56e5f621a02dd569c2d9b302ade21550e87c0263e9a2325a706b338cf7eea",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/agent/3/up.png",
+      "path": "src/pathfinding_emulator/assets/pointers/3/up.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/agent/3/up.png",
       "sha256": "397bb4c9c5737888f27daeb17eccf211ebe489b8a0fe9f90b100bbd0b397b25b",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/back.png",
+      "path": "src/pathfinding_emulator/assets/back.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/back.png",
       "sha256": "4a9b9adddf837ec2bce981cb5f68d8eef6eea3db0aec5a75625741ff231a1379",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/bg.png",
+      "path": "src/pathfinding_emulator/assets/bg.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/bg.png",
       "sha256": "a2a5d55100b3cbf17ed7b8bc42634d63b08707efa82a24e550242d2bcf5a4c43",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/decrease.png",
+      "path": "src/pathfinding_emulator/assets/decrease.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/decrease.png",
       "sha256": "8991105c25224c1f1c8d5b1a3c32648b0cffa8a5519e2695cfe36e0c0a0017cd",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/0/box.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/classic/box.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/0/box.jpg",
       "sha256": "3669fe6077e409e910979ee471678b5e0fb900601745d57a76036884f965f4c2",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/0/floor.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/classic/floor.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/0/floor.jpg",
       "sha256": "2942ce7e3dad8314c9b9e95f8259fc40102c2f1a09d82e9cb863cef5462ea00c",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/0/hole.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/classic/hole.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/0/hole.jpg",
       "sha256": "09b9330dd6957049f2315ed3f6b6277592f1586dcdae2a28896fe0bcaa5fabce",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/0/stone.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/classic/stone.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/0/stone.jpg",
       "sha256": "f83f6943f5e41abbf79cdc6ddc23247b08b40b13b450ede18befa0998e935770",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/1/box.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/wood_stone/box.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/1/box.jpg",
       "sha256": "1a83b9e48944ec352d7b47c6a5e4f4dd6f2e0ad9388feafb102eb090ca86cde2",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/1/floor.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/wood_stone/floor.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/1/floor.jpg",
       "sha256": "9812bb9b7b44a01f5cd9009abdbcfb9778d13605fa0cf59f4201462f6d1d5c26",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/1/hole.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/wood_stone/hole.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/1/hole.jpg",
       "sha256": "c860c90d64627d06426037d7429ae4ebe96d8dbc3862686798ee43ae9001182d",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/1/stone.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/wood_stone/stone.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/1/stone.jpg",
       "sha256": "3b4ee6e5d6194a03f47a7619911ef70a3e19b612316a27e68f56ade5e6ae49a8",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/2/box.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/lava/box.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/2/box.jpg",
       "sha256": "5c522a07150399e01167bbcd0d8333a6108187355ff8fb6b27afbd0640033da3",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/2/floor.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/lava/floor.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/2/floor.jpg",
       "sha256": "18f6423a2136bc97f5d68923aa170038db0c5a494aca417b48b03fbd0cc5930c",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/2/hole.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/lava/hole.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/2/hole.jpg",
       "sha256": "c0e1a6147252d80bfd4e9905b998620a2399ff2566e50a7091ac5d329df52c5b",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/2/stone.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/lava/stone.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/2/stone.jpg",
       "sha256": "dd6f6918c2264d240fe7e1b52b7b575534399a54b6d2e35d95805292aee3ebb9",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/3/box.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/grass_water/box.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/3/box.jpg",
       "sha256": "e7578eae0c326953940f0e9b5a8c122de428a5b12e33bbb88a8ee150a60f1b5a",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/3/floor.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/grass_water/floor.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/3/floor.jpg",
       "sha256": "aecb4ca558503a5dbae13c2ee5a89664c1984ceac429e01f1706027a13cdf6e2",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/3/hole.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/grass_water/hole.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/3/hole.jpg",
       "sha256": "48db113eb4f27a7520f5dfb5c9d39264745b63b897182a81255110a3bc36c2c0",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/env/3/stone.jpg",
+      "path": "src/pathfinding_emulator/assets/tiles/grass_water/stone.jpg",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/env/3/stone.jpg",
       "sha256": "99da416cbecb97977b63ad58a4b105e28b2f996989d8987885726caf149ee50a",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/increase.png",
+      "path": "src/pathfinding_emulator/assets/increase.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/increase.png",
       "sha256": "1a8c55f5c33d26f78dc6d015674657c7434ecabe38c98053a1af7b4f2a2f72f7",
       "unchanged": true
     },
     {
-      "path": "pathfinding_emulator/assets/reset.png",
+      "path": "src/pathfinding_emulator/assets/reset.png",
       "origin": "https://github.com/Roobahist/PathFindingEmulator/blob/0e29ce8/images/reset.png",
       "sha256": "ee73f90f3c15e666cec2068116877ce080bfece84dfda43ec005ea1c59ea6a02",
       "unchanged": true

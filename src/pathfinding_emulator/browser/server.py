@@ -8,12 +8,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from .agents import ALGORITHMS, Agent, SearchLimitError
-from .config import ASSETS_DIR, PACKAGE_DIR, SAMPLE_MAPS_DIR
-from .environment import Env, base_map, validate_map
-from .maps import ChallengeDesigner
+from ..agents import ALGORITHMS, Agent, SearchLimitError
+from ..config import ASSETS_DIR, SAMPLE_MAPS_DIR
+from ..environment import Env, base_map, validate_map
+from ..maps import ChallengeDesigner
 
-WEB_DIR = PACKAGE_DIR / "web"
+WEB_DIR = Path(__file__).resolve().parent / "static"
 MAX_REQUEST = 1024 * 1024
 MAX_REPLAY = 8 * 1024 * 1024
 
