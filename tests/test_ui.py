@@ -36,8 +36,8 @@ class UITests(unittest.TestCase):
         from pathfinding_emulator.ui.solver import Solver
 
         original = Path.cwd()
-        try:
-            with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory() as directory:
+            try:
                 os.chdir(directory)
                 gui = GUI()
                 for page in range(4):
@@ -49,8 +49,9 @@ class UITests(unittest.TestCase):
                     editor.redrawPage()
                     solver = Solver(50, 0.5, Env(grid).state, style, style)
                     self.assertEqual(float(solver.delayinput.text), 0.5)
-        finally:
-            os.chdir(original)
+            finally:
+                # Windows cannot remove the process's current working directory.
+                os.chdir(original)
 
     def test_keyboard_navigation_and_path_input(self):
         from pathfinding_emulator.ui.main_gui import GUI

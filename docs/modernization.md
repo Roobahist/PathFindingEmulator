@@ -125,7 +125,9 @@ Executed locally on macOS with Python 3.12.14:
 Pygame tests exercise all themes, arbitrary working directories, keyboard inputs,
 nonnegative delay, rendering a previously updated state, and design/edit/save/
 solve/back/quit with actual screen classes. Screenshots were inspected; form
-labels were aligned to avoid overlaps. Tests run without external APIs.
+labels were aligned to avoid overlaps. The initial hosted Windows run found that
+a test tried to remove its active working directory. The fixture now restores
+the working directory before temporary-directory cleanup. Tests run without external APIs.
 The wheel smoke uses the already installed Pygame runtime for rendering while
 loading application code/artwork/samples exclusively from its temporary wheel
 installation. It does not silently rely on source package paths.
