@@ -1,191 +1,144 @@
-from ai import Action
+"""Historical educational policies; the supported launcher uses ai.Agent.
+
+These stochastic policies intentionally include ineffective pushes. They do
+not guarantee completion; perception and randomness can be supplied for study.
+"""
+
 import random
 from math import exp
 
+from ai import Action
+
 
 class AgentInspiration:
-    def __init__(self, env_percption):
-        # YOU CAN CHOOSE AGENT TYPE HERE, LOOK AT LINE 20 FOR MORE CHOICES
+    def __init__(self, env_percption, rng=None):
+        self.rng = rng if rng is not None else random.Random()
         self.agent_type = "NErSimAnealAgent"
-
         self.agent_type_dict = {
-
-            "BruteRandomAgent": self.BruteRandomAgent,
-            "WiseRandomAgent": self.WiseRandomAgent,
-            "EdgeOrientedAgent": self.EdgeOrientedAgent,
-            "NearestEdgeAgent": self.NearestEdgeAgent,
-            "NErandAgent": self.NErandAgent,
-            "NErSimAnealAgent": self.NErSimAnealAgent,
-            "NE1memAgent": self.NE1memAgent,
-
+            name: getattr(self, name)
+            for name in (
+                "BruteRandomAgent",
+                "WiseRandomAgent",
+                "EdgeOrientedAgent",
+                "NearestEdgeAgent",
+                "NErandAgent",
+                "NErSimAnealAgent",
+                "NE1memAgent",
+            )
         }
-
-        self.push_on, self.push_dir, self.last_push_on = None, None, None
+        self.push_on = self.push_dir = self.last_push_on = None
         self.perceive = env_percption
         self.sequence = []
-
-        self.t=0
+        self.t = 0
 
     def act(self):
-        if len(self.sequence)!=0: return self.sequence.pop(0)
-
+        if self.sequence:
+            return self.sequence.pop(0)
+        if not any(1 in row for row in self.perceive()):
+            raise StopIteration("All boxes have been removed")
         result = self.agent_type_dict[self.agent_type]()
-
-        # check if a sequence was returned
-        if isinstance(result, list) and \
-           not(False in [isinstance(ar, Action) for ar in result]):
+        if isinstance(result, list) and all(
+            isinstance(action, Action) for action in result
+        ):
+            if not result:
+                raise StopIteration("Plan exhausted")
             self.sequence = result
             return self.sequence.pop(0)
-
         if not isinstance(result, Action):
-            raise TypeError("Agent did not return an instance of the Action class")
-
-        *self.push_on, self.push_dir = result.return_action()
-
+            raise TypeError("Agent must return an Action or list of Actions")
+        self.push_on = (result.x, result.y)
+        self.push_dir = result.direction
         return result
 
+    def choose_box(self, grid):
+        boxes = [
+            (r, c)
+            for r, row in enumerate(grid)
+            for c, tile in enumerate(row)
+            if tile == 1
+        ]
+        if not boxes:
+            raise StopIteration("All boxes have been removed")
+        return self.rng.choice(boxes)
+
+    def choose_again(self, grid):
+        return (
+            not self.push_dir
+            or grid[self.push_on[0]][self.push_on[1]] != 1
+            or self.rng.random() > 0.75
+        )
+
+    def random_direction(self):
+        return self.rng.choice(["right", "left", "up", "down"])
+
+    def edge_direction(self, grid, row, col, vertical=None):
+        height, width = len(grid), len(grid[0])
+        if vertical is None:
+            vertical = min(row, height - 1 - row) < min(col, width - 1 - col)
+        if vertical:
+            return "up" if 2 * row < height else "down"
+        return "left" if 2 * col < width else "right"
 
     def BruteRandomAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
+        grid = self.perceive()
+        if self.choose_again(grid):
             return Action(
-                random.randint(1, h - 2), random.randint(1, w - 2), random.choice(["right", "left", "up", "down"]))
-        else:
-            return Action(*self.push_on, self.push_dir)
+                self.rng.randint(1, len(grid) - 2),
+                self.rng.randint(1, len(grid[0]) - 2),
+                self.random_direction(),
+            )
+        return Action(*self.push_on, self.push_dir)
 
     def WiseRandomAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            return Action(i, j, random.choice(["right", "left", "up", "down"]))
-        else:
-            return Action(*self.push_on, self.push_dir)
+        grid = self.perceive()
+        if self.choose_again(grid):
+            return Action(*self.choose_box(grid), self.random_direction())
+        return Action(*self.push_on, self.push_dir)
 
     def EdgeOrientedAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            if random.random() < 0.5:
-                if 2 * i < h:
-                    dir = 'up'
-                else:
-                    dir = 'down'
-            else:
-                if 2 * j < w:
-                    dir = 'left'
-                else:
-                    dir = 'right'
-            return Action(i, j, dir)
-        else:
-            return Action(*self.push_on, self.push_dir)
+        grid = self.perceive()
+        if self.choose_again(grid):
+            row, col = self.choose_box(grid)
+            return Action(
+                row, col, self.edge_direction(grid, row, col, self.rng.random() < 0.5)
+            )
+        return Action(*self.push_on, self.push_dir)
 
     def NearestEdgeAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            h_edge_dist = min(i, h - 1 - i)
-            v_edge_dist = min(j, w - 1 - j)
-            if h_edge_dist < v_edge_dist:
-                if 2 * i < h:
-                    dir = 'up'
-                else:
-                    dir = 'down'
-            else:
-                if 2 * j < w:
-                    dir = 'left'
-                else:
-                    dir = 'right'
-            return Action(i, j, dir)
-        else:
-            return Action(*self.push_on, self.push_dir)
+        return self.edge_action(0)
 
     def NErandAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            h_edge_dist = min(i, h - 1 - i)
-            v_edge_dist = min(j, w - 1 - j)
-            if random.random() < 0.2:
-                dir = random.choice(["right", "left", "up", "down"])
-            elif h_edge_dist < v_edge_dist:
-                if 2 * i < h:
-                    dir = 'up'
-                else:
-                    dir = 'down'
-            else:
-                if 2 * j < w:
-                    dir = 'left'
-                else:
-                    dir = 'right'
-            return Action(i, j, dir)
-        else:
-            return Action(*self.push_on, self.push_dir)
+        return self.edge_action(0.2)
 
     def NErSimAnealAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or map_array[self.push_on[0]][self.push_on[1]] != 1 or random.random() > 0.75:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            h_edge_dist = min(i, h - 1 - i)
-            v_edge_dist = min(j, w - 1 - j)
-            if random.random() < 1 - exp(-self.t / 10):
-                dir = random.choice(["right", "left", "up", "down"])
-            elif h_edge_dist < v_edge_dist:
-                if 2 * i < h:
-                    dir = 'up'
-                else:
-                    dir = 'down'
-            else:
-                if 2 * j < w:
-                    dir = 'left'
-                else:
-                    dir = 'right'
-            self.t = self.t + 1
-            return Action(i, j, dir)
-        else:
-            self.t = self.t + 1
-            return Action(*self.push_on, self.push_dir)
+        action = self.edge_action(1 - exp(-self.t / 10))
+        self.t += 1
+        return action
+
+    def edge_action(self, random_probability):
+        grid = self.perceive()
+        if self.choose_again(grid):
+            row, col = self.choose_box(grid)
+            direction = (
+                self.random_direction()
+                if self.rng.random() < random_probability
+                else self.edge_direction(grid, row, col)
+            )
+            return Action(row, col, direction)
+        return Action(*self.push_on, self.push_dir)
 
     def NE1memAgent(self):
-        map_array=self.perceive()
-        if not self.push_dir or self.push_on == self.last_push_on and map_array[self.push_on[0]][self.push_on[1]] != 1:
-            w, h = len(map_array[0]), len(map_array)
-            for _ in range(100):
-                (i, j) = (random.randint(1, h - 2), random.randint(1, w - 2))
-                if map_array[i][j] == 1: break
-            h_edge_dist = min(i, h - 1 - i)
-            v_edge_dist = min(j, w - 1 - j)
-            if random.random() < 0.2:
-                dir = random.choice(["right", "left", "up", "down"])
-            elif h_edge_dist < v_edge_dist:
-                if 2 * i < h:
-                    dir = 'up'
-                else:
-                    dir = 'down'
-            else:
-                if 2 * j < w:
-                    dir = 'left'
-                else:
-                    dir = 'right'
-            return Action(i, j, dir)
-            self.last_push_on = (i, j)
-        elif self.push_on == self.last_push_on:
-            return Action(*self.push_on, random.choice(["right", "left", "up", "down"]))
-        else:
-            self.last_push_on = self.push_on
-            return Action(*self.push_on, self.push_dir)
+        grid = self.perceive()
+        if not self.push_dir or grid[self.push_on[0]][self.push_on[1]] != 1:
+            row, col = self.choose_box(grid)
+            direction = (
+                self.random_direction()
+                if self.rng.random() < 0.2
+                else self.edge_direction(grid, row, col)
+            )
+            self.last_push_on = (row, col)
+            return Action(row, col, direction)
+        if self.push_on == self.last_push_on:
+            return Action(*self.push_on, self.random_direction())
+        self.last_push_on = self.push_on
+        return Action(*self.push_on, self.push_dir)

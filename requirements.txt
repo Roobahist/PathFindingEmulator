@@ -1,0 +1,2 @@
+# Optional Pygame desktop interface; synchronized with the desktop extra.
+pygame==2.6.1

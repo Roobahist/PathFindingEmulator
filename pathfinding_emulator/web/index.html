@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PathFinding Emulator</title><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
+<body>
+<svg class="svg-defs" aria-hidden="true"><defs>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 0 6M4 3v6h6"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3h2Zm2 0v6h10V3M7 21v-8h10v8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14"/></symbol>
+<symbol id="i-step" viewBox="0 0 24 24"><path d="m5 5 11 7-11 7ZM20 5v14"/></symbol>
+</defs></svg>
+<header class="appbar">
+<a class="brand" href="/"><img src="/assets/env/1/box.jpg" alt=""><span>PathFinding <span class="brand-suffix">Emulator</span></span></a>
+<nav class="mode-switch" aria-label="Workspace"><button id="edit-mode" class="active" aria-pressed="true">Editor</button><button id="play-mode" aria-pressed="false">Playback</button></nav>
+<div class="header-actions"><label class="sr-only" for="map-library">Map library</label><select id="map-library"><option value="">Open a map…</option></select><button id="import-button" class="quiet">Import JSON</button><input id="import-file" type="file" accept=".json,application/json" hidden><button id="save-button" class="secondary"><svg><use href="#i-save"/></svg>Save map</button></div>
+</header>
+<main>
+<div class="workspace-heading"><div><h1 id="board-title">Map 13</h1><p id="board-description">Make your next move.</p></div><button id="new-button" class="secondary"><svg><use href="#i-plus"/></svg>New board</button></div>
+<section id="board-config" class="board-config" aria-label="New board settings" hidden><label>Rows<input id="new-rows" type="number" min="1" max="20" value="6"></label><label>Columns<input id="new-cols" type="number" min="1" max="20" value="6"></label><label>Starting layout<select id="new-layout"><option value="empty">Empty board</option><option value="random">Random tiles</option></select></label><button id="create-button" class="primary">Create board</button><button id="cancel-new" class="quiet">Cancel</button></section>
+<div class="workspace">
+<section id="stage" class="stage" aria-label="Puzzle board">
+<div class="stage-top"><span class="live-state"><span class="status-dot"></span><span id="stage-status">Editing</span></span><span id="board-dimensions">5 × 5 interior</span></div>
+<div class="arena"><div id="board" class="board" role="grid" aria-label="Puzzle grid"></div></div>
+<div class="stage-bottom"><span id="board-hint">Click to place · Right-click to erase</span><button id="undo-button" class="quiet compact"><svg><use href="#i-undo"/></svg>Undo</button></div>
+</section>
+<section class="transport" aria-label="Playback controls"><div class="transport-actions"><button id="reset-button" class="icon-button" aria-label="Return to first frame" title="Reset playback"><svg><use href="#i-reset"/></svg></button><button id="pause-button" class="play-button" aria-label="Play solution" disabled><svg><use href="#i-play"/></svg></button><button id="step-button" class="icon-button" aria-label="Next push" title="Next push" disabled><svg><use href="#i-step"/></svg></button></div><div class="timeline"><label class="sr-only" for="scrubber">Solution position</label><input id="scrubber" type="range" min="0" max="0" value="0" disabled><span id="frame-label">0 / 0</span></div><label class="speed-control" for="speed">Pace<select id="speed"><option value="1000">1×</option><option value="500" selected>2×</option><option value="250">4×</option></select></label></section>
+<aside class="inspector">
+<section id="edit-tools" class="tool-section"><h2>Build your board</h2><p class="muted">Choose a tile, then paint the grid.</p><div id="palette" class="palette" aria-label="Tile palette"></div></section>
+<section class="tool-section artwork-section"><div class="section-title"><h2>Artwork</h2><span id="artwork-name">Grass & water</span></div><div id="themes" class="themes" aria-label="Artwork theme"></div></section>
+<section class="tool-section"><h2>Solver</h2><label class="field-label" for="algorithm">Find a solution with</label><select id="algorithm"><option value="A_Star">A* · Lowest movement cost</option><option value="IDS">IDS · Fewest pushes</option><option value="BFS">Breadth-first · Fewest pushes</option><option value="DFS">Depth-first · Explore deeply</option><option value="Greedy">Greedy · Follow nearby holes</option><option value="random">Random · Explore legal moves</option></select><button id="solve-button" class="primary solve"><svg><use href="#i-play"/></svg><span>Solve & play</span></button><p id="solver-message" class="solver-message" role="status">Solve, then pause or step through each push.</p></section>
+<section class="board-summary" aria-label="Board statistics"><div><span>Boxes left</span><strong id="box-count">0</strong></div><div><span>Movement cost</span><strong id="cost-count">0</strong></div><div><span>Pushes</span><strong id="action-count">0</strong></div></section>
+</aside>
+</div>
+
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<footer><span>H Hole · S Stone · B Box · E Floor · Ctrl/Cmd+Z Undo</span><span>Original textures. Real puzzle rules.</span></footer>
+</main>
+</body></html>
