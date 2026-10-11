@@ -9,8 +9,8 @@ dist/
 .idea/
 .vscode/
 .DS_Store
-# User-created maps; the original tracked maps remain versioned.
-maps/*.json
+# Local user maps; bundled samples live in src/pathfinding_emulator/sample_maps.
+maps/
 
 # Local design captures and discarded question rounds.
 .impeccable/review/

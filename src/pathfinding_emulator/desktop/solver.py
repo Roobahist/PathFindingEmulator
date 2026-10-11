@@ -7,7 +7,7 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame as pg
 
 from . import theme as ui
-from .main_gui import InputBox
+from .launcher import InputBox
 from .tiles import draw_board, load_tiles
 
 
@@ -20,7 +20,7 @@ class Solver:
 
         self.direction_images = {
             direction: pg.transform.scale(
-                pg.image.load(asset_path("agent", agent_style, direction + ".png")),
+                pg.image.load(asset_path("pointers", agent_style, direction + ".png")),
                 (2 * cubeSize, 2 * cubeSize),
             )
             for direction in ("left", "right", "up", "down")

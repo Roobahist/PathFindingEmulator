@@ -173,19 +173,40 @@ proposed through Dependabot pull requests; releases are not published
 automatically. This is a local application, so Docker and deployment
 infrastructure are omitted.
 
-## Architecture and ownership
+## Project structure
 
-`pathfinding_emulator/environment.py` owns rules and scoring; `maps.py` owns
-validation/persistence/generation; `agents.py` owns bounded planning; `app.py`
-assembles settings, random sources and perception callbacks and runs the UI or
-headless simulation. `web_server.py` adapts the engine over local HTTP; `web/`
-contains the HTML/CSS/JS browser workspace. `ui/` retains Pygame presentation.
-Tests live in `tests/`; assets and sample maps are bundled with the package.
-`other_agents.py` retains educational experimental policies with injected
-randomness; these policies are not selected by the supported launcher.
+```text
+src/pathfinding_emulator/
+  app.py                  Application and CLI entry point
+  config.py               Validated settings and package paths
+  environment.py          Puzzle rules and scoring
+  agents.py               Supported solvers
+  maps.py                 Validation, storage and generation
+  experimental.py         Educational search policies
+  browser/
+    server.py             Local HTTP adapter
+    static/               HTML, CSS, JavaScript and icons
+  desktop/                Optional Pygame launcher, editor and solver
+  assets/
+    tiles/                classic, wood_stone, lava, grass_water
+    pointers/             Original desktop pointer sprites
+    fonts/                Bundled fonts and license
+  sample_maps/            One canonical copy of the original samples
+compat/                   Legacy import forwarding modules
+tests/                   Engine, API, CLI and desktop checks
+tools/                   Screenshot and installed-wheel checks
+docs/                    Architecture, reviews and real screenshots
+```
+
+Install with `python -m pip install -e .` before developing or running tests.
+Use `python -m pathfinding_emulator` or the installed `pathfinding-emulator`
+command. `python Main.py` remains available for launching directly from source.
+Legacy imports such as `from Env import Env` still work after installation;
+new code should use the package modules. `maps/` is ignored local save storage,
+not a second copy of the bundled samples.
 
 Read [architecture](docs/architecture.md), [modernization report](docs/modernization.md),
 and [agent guidance](AGENTS.md). No license was present in the original repository;
 this modernization does not infer licensing rights for code or artwork. The
 bundled IBM Plex Sans font includes its SIL Open Font License in
-`pathfinding_emulator/assets/fonts/LICENSE.txt`.
+`src/pathfinding_emulator/assets/fonts/LICENSE.txt`.

@@ -2,7 +2,7 @@
 
 import pygame as pg
 
-from ..config import asset_path
+from ..config import ARTWORK_THEMES, asset_path
 
 TILE_NAMES = ("stone", "hole", "empty", "box")
 
@@ -10,7 +10,10 @@ TILE_NAMES = ("stone", "hole", "empty", "box")
 def load_tiles(style, size):
     return {
         name: pg.transform.scale(
-            pg.image.load(asset_path("env", style, filename + ".jpg")), (size, size)
+            pg.image.load(
+                asset_path("tiles", ARTWORK_THEMES[style], filename + ".jpg")
+            ),
+            (size, size),
         )
         for name, filename in (
             ("stone", "stone"),

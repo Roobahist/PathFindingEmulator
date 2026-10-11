@@ -9,10 +9,10 @@ os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "hide")
 
 import pygame as pg
 
+from pathfinding_emulator.desktop.editor import MapEditor
+from pathfinding_emulator.desktop.launcher import GUI
+from pathfinding_emulator.desktop.solver import Solver
 from pathfinding_emulator.environment import Env, base_map
-from pathfinding_emulator.ui.main_gui import GUI
-from pathfinding_emulator.ui.map_editor import MapEditor
-from pathfinding_emulator.ui.solver import Solver
 
 
 def main():

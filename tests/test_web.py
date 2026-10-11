@@ -7,10 +7,10 @@ import unittest
 from http.client import HTTPConnection
 from pathlib import Path
 
+from pathfinding_emulator.browser.server import make_server
 from pathfinding_emulator.config import Settings
 from pathfinding_emulator.environment import Env, base_map
 from pathfinding_emulator.maps import ChallengeDesigner, load_map
-from pathfinding_emulator.web_server import make_server
 
 
 class BrowserServerTests(unittest.TestCase):
@@ -49,7 +49,7 @@ class BrowserServerTests(unittest.TestCase):
             ("/app.js", "text/javascript"),
             ("/chevron.svg", "image/svg+xml"),
             ("/styles.css", "text/css"),
-            ("/assets/env/3/box.jpg", "image/jpeg"),
+            ("/assets/tiles/grass_water/box.jpg", "image/jpeg"),
             ("/assets/fonts/IBMPlexSans-Regular.ttf", "font/ttf"),
         ]:
             with self.subTest(path=path):

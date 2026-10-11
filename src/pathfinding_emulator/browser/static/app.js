@@ -2,11 +2,12 @@
 const $ = id => document.getElementById(id);
 const tileNames = ['Stone', 'Hole', 'Floor', 'Box'];
 const tileFiles = ['stone', 'hole', 'floor', 'box'];
+const artworkFolders = ['classic', 'wood_stone', 'lava', 'grass_water'];
 const themes = ['Classic', 'Wood & stone', 'Lava', 'Grass & water'];
 const shortcuts = ['S', 'H', 'E', 'B'];
 const state = {grid: [], original: [], theme: 3, tile: 1, undo: [], frames: [], frame: 0, playing: false, timer: null, mode: 'edit', request: null, focused: 0, seed: null};
 const copy = value => JSON.parse(JSON.stringify(value));
-const art = (value, theme = state.theme) => `/assets/env/${theme}/${tileFiles[value + 2]}.jpg`;
+const art = (value, theme = state.theme) => `/assets/tiles/${artworkFolders[theme]}/${tileFiles[value + 2]}.jpg`;
 async function api(path, data) {
   const response = await fetch(path, data === undefined ? {} : {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
   const result = await response.json();

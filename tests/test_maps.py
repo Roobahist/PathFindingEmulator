@@ -1,3 +1,5 @@
+import hashlib
+import json
 import pickle
 import random
 import tempfile
@@ -19,7 +21,12 @@ class MapsTests(unittest.TestCase):
                 grid = load_map(path)
                 self.assertTrue(grid)
                 self.assertEqual(
-                    path.read_bytes(), (Path("maps") / path.name).read_bytes()
+                    hashlib.sha256(path.read_bytes()).hexdigest(),
+                    json.loads(
+                        (
+                            Path(__file__).parent / "fixtures/sample_map_hashes.json"
+                        ).read_text()
+                    )[path.name],
                 )
 
     def test_json_round_trip_and_exclusive_concurrent_saves(self):

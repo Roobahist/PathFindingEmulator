@@ -35,9 +35,9 @@ def run_headless(grid, settings, rng=None):
 def run_gui(settings, designer, initial_map=None):
     import pygame as pg
 
-    from .ui.main_gui import GUI
-    from .ui.map_editor import MapEditor
-    from .ui.solver import Solver
+    from .desktop.editor import MapEditor
+    from .desktop.launcher import GUI
+    from .desktop.solver import Solver
 
     def make_editor(grid, gui=None, quotas=False):
         if len(grid) > 22 or len(grid[0]) > 22:
@@ -321,7 +321,7 @@ def main(argv=None):
         elif args.desktop:
             run_gui(settings, designer, designer.mapArr)
         else:
-            from .web_server import run_web
+            from .browser.server import run_web
 
             if not 0 <= args.port <= 65535:
                 raise ValueError("Port must be between 0 and 65535")

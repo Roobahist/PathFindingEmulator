@@ -1,6 +1,7 @@
 include AGENTS.md requirements.txt requirements-dev.lock .gitignore
-recursive-include docs *.md *.png
+include Main.py
+recursive-include docs *.md *.png *.jpg *.json
 recursive-include tests *.py *.json
 recursive-include tools *.py
-recursive-include maps *.pickle
+recursive-include compat *.py *.md
 recursive-include .github *.yml
