@@ -19,11 +19,12 @@ into holes while tracking movement cost. Users edit and inspect solutions locall
 ## Users and Operating Context
 Someone creating, editing and solving puzzles with a mouse or keyboard in a
 local browser. On narrow screens the board comes first and tools follow it.
+At desktop sizes of at least 1000 × 700, the complete workspace fits one viewport height.
 No narrower demographic or reference application was supplied.
 
 ## Capabilities and Constraints
 - Floor, hole, stone and box tiles; chain pushes and continuation scoring.
-- Random, uniform-cost and iterative-deepening agents with bounded search.
+- Random, uniform-cost, iterative-deepening, breadth-first, depth-first and greedy agents with bounded search.
 - Preserve original artwork, sample maps, rules, stored data and legacy imports.
 - Exclusive JSON saves in the configured maps directory; never overwrite maps.
 - Browser boards support 20 × 20 interior cells; headless supports 100 × 100.
@@ -37,7 +38,8 @@ They explicitly authorized changing the presentation stack, including HTML.
 They asked for Impeccable and modern, sleek design, with no reference app in mind.
 
 ## Evidence and Principles
-All four original texture sets, directional sprites and 14 original maps are
+All four original texture sets, retained legacy directional sprites and 14 original maps are
 available. README images must show the running application. The board leads;
 controls make editing, saving, solving and inspecting playback easy to find.
+Browser playback uses a large directional SVG arrow instead of the legacy hand sprite.
 Preserve the puzzle's character through its actual artwork and saturated color.

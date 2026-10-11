@@ -14,7 +14,7 @@ class AgentTests(unittest.TestCase):
             grid = base_map(2, 2)
             grid[1][1:3] = cells[:2]
             grid[2][1:3] = cells[2:]
-            for algorithm in ("A_Star", "IDS"):
+            for algorithm in ("A_Star", "IDS", "BFS", "DFS", "Greedy"):
                 with self.subTest(cells=cells, algorithm=algorithm):
                     plan = solve(grid, algorithm, max_nodes=10000, max_depth=10)
                     env = Env(grid)
@@ -46,7 +46,7 @@ class AgentTests(unittest.TestCase):
 
     def test_unsolvable_and_limits_are_distinct(self):
         grid = [[-2] * 3, [-2, 1, -2], [-2] * 3]
-        for algorithm in ("A_Star", "IDS"):
+        for algorithm in ("A_Star", "IDS", "BFS", "DFS", "Greedy"):
             with self.assertRaises(NoSolutionError):
                 solve(grid, algorithm)
         grid = base_map(3, 3)
@@ -94,3 +94,22 @@ class AgentTests(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 Settings(**kwargs)
+
+    def test_breadth_first_matches_shortest_push_reference(self):
+        for cells in product((-2, -1, 0, 1), repeat=4):
+            grid = base_map(2, 2)
+            grid[1][1:3], grid[2][1:3] = cells[:2], cells[2:]
+            self.assertEqual(len(solve(grid, "BFS")), len(solve(grid, "IDS")))
+
+    def test_new_agents_are_bounded_and_cli_runnable(self):
+        grid = base_map(3, 3)
+        grid[2][2] = 1
+        for algorithm in ("BFS", "DFS", "Greedy"):
+            with self.subTest(algorithm=algorithm):
+                with self.assertRaises(SearchLimitError):
+                    solve(grid, algorithm, max_nodes=1)
+                env, _ = run_headless(grid, Settings(algorithm=algorithm))
+                self.assertTrue(env.goal_test())
+        for algorithm in ("BFS", "DFS"):
+            with self.assertRaises(SearchLimitError):
+                solve(grid, algorithm, max_depth=1)

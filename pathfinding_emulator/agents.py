@@ -3,10 +3,14 @@
 import random
 from collections import deque
 from dataclasses import dataclass
+from functools import partial
 from heapq import heappop, heappush
 from itertools import count
 
 from .environment import DIRECTIONS, Env, State
+
+SEARCH_ALGORITHMS = ("A_Star", "IDS", "BFS", "DFS", "Greedy")
+ALGORITHMS = ("random", *SEARCH_ALGORITHMS)
 
 
 class NoSolutionError(ValueError):
@@ -65,20 +69,69 @@ def search_steps(grid, algorithm="A_Star", max_nodes=50000, max_depth=100):
 
     A_Star uses a zero heuristic (uniform-cost search), since the historical
     edge-distance heuristic overestimated costs and ignored internal holes.
-    IDS returns a shortest action sequence, not necessarily the cheapest one.
+    IDS and BFS return a shortest action sequence within the depth limit.
+    DFS explores deeply; greedy favors boxes near holes. Neither is optimal.
     """
-    if algorithm not in {"A_Star", "IDS"}:
-        raise ValueError("Search algorithm must be A_Star or IDS")
+    if algorithm not in SEARCH_ALGORITHMS:
+        raise ValueError("Unknown search algorithm")
     if any(type(n) is not int or n <= 0 for n in (max_nodes, max_depth)):
         raise ValueError("Search limits must be positive integers")
     root = Env(grid)
     expanded = 0
-    if algorithm == "A_Star":
+    if algorithm in {"BFS", "DFS"}:
+        frontier = deque([(root, [])])
+        reached = {root.state.key()[0]: 0}
+        cutoff = False
+        while frontier:
+            env, plan = frontier.popleft() if algorithm == "BFS" else frontier.pop()
+            if env.goal_test():
+                return plan
+            if expanded >= max_nodes:
+                raise SearchLimitError(f"Search reached {max_nodes} expanded nodes")
+            expanded += 1
+            successors = list(children(env))
+            if algorithm == "DFS":
+                successors.reverse()
+            for child, action in successors:
+                key = child.state.key()[0]
+                depth = len(plan) + 1
+                if depth >= reached.get(key, float("inf")):
+                    continue
+                if depth > max_depth:
+                    cutoff = True
+                    continue
+                reached[key] = depth
+                frontier.append((child, plan + [action]))
+            yield None
+        if cutoff:
+            raise SearchLimitError(f"Search reached depth {max_depth}")
+        raise NoSolutionError("No solution: all reachable states were exhausted")
+
+    if algorithm in {"A_Star", "Greedy"}:
+        holes = [
+            (r, c)
+            for r, row in enumerate(grid)
+            for c, tile in enumerate(row)
+            if tile == -1
+        ]
+
+        def priority(env):
+            if algorithm == "A_Star":
+                return env.send_cost()
+            # Greedy best-first follows proximity to holes; it makes no
+            # cost/length optimality promise, particularly for chain pushes.
+            return sum(
+                min((abs(r - hr) + abs(c - hc) for hr, hc in holes), default=0)
+                for r, row in enumerate(env.send_map())
+                for c, tile in enumerate(row)
+                if tile == 1
+            )
+
         order = count()
-        frontier = [(0, next(order), root, [])]
+        frontier = [(priority(root), next(order), 0, root, [])]
         reached = {root.state.key(): 0}
         while frontier:
-            cost, _, env, plan = heappop(frontier)
+            _, _, cost, env, plan = heappop(frontier)
             if cost != reached[env.state.key()]:
                 continue
             if env.goal_test():
@@ -94,7 +147,13 @@ def search_steps(grid, algorithm="A_Star", max_nodes=50000, max_depth=100):
                     reached[key] = child.send_cost()
                     heappush(
                         frontier,
-                        (child.send_cost(), next(order), child, plan + [action]),
+                        (
+                            priority(child),
+                            next(order),
+                            child.send_cost(),
+                            child,
+                            plan + [action],
+                        ),
                     )
             yield None
         raise NoSolutionError("No solution: all reachable states were exhausted")
@@ -152,7 +211,7 @@ class Agent:
         max_nodes=50000,
         max_depth=100,
     ):
-        if agent_type not in {"random", "A_Star", "IDS"}:
+        if agent_type not in ALGORITHMS:
             raise ValueError("Unknown agent type")
         self.perceive = env_perception
         self.agent_type = agent_type
@@ -161,10 +220,12 @@ class Agent:
         self.sequence = deque()
         self.done = False
         self.agent_type_dict = {
-            "random": self.random_agent,
-            "A_Star": self.A_Star_agent,
-            "IDS": self.IDS_agent,
+            name: partial(self.search_agent, name) for name in SEARCH_ALGORITHMS
         }
+        self.agent_type_dict["random"] = self.random_agent
+
+    def search_agent(self, algorithm):
+        return solve(self.perceive(), algorithm, self.max_nodes, self.max_depth)
 
     def find_loc(self, gamemap, value):
         return [

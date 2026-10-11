@@ -7,7 +7,7 @@ import time
 from collections import deque
 from pathlib import Path
 
-from .agents import Agent, NoSolutionError, SearchLimitError, search_steps
+from .agents import ALGORITHMS, Agent, NoSolutionError, SearchLimitError, search_steps
 from .config import Settings, validate_styles
 from .environment import Env
 from .maps import ChallengeDesigner
@@ -272,7 +272,9 @@ def parser():
         help="Directory for new JSON saves",
     )
     result.add_argument(
-        "--algorithm", choices=("random", "A_Star", "IDS"), default="random"
+        "--algorithm",
+        choices=ALGORITHMS,
+        default="random",
     )
     result.add_argument(
         "--desktop", action="store_true", help="Use the legacy Pygame interface"

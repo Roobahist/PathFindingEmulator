@@ -47,6 +47,7 @@ class BrowserServerTests(unittest.TestCase):
         for path, content_type in [
             ("/", "text/html"),
             ("/app.js", "text/javascript"),
+            ("/chevron.svg", "image/svg+xml"),
             ("/styles.css", "text/css"),
             ("/assets/env/3/box.jpg", "image/jpeg"),
             ("/assets/fonts/IBMPlexSans-Regular.ttf", "font/ttf"),
@@ -72,7 +73,7 @@ class BrowserServerTests(unittest.TestCase):
     def test_replay_matches_engine_scoring_and_preserves_input(self):
         grid = base_map(2, 2)
         grid[1][1] = grid[1][2] = 1
-        for algorithm in ("A_Star", "IDS", "random"):
+        for algorithm in ("A_Star", "IDS", "BFS", "DFS", "Greedy", "random"):
             with self.subTest(algorithm=algorithm):
                 status, body, _ = self.request(
                     "/api/solve", {"grid": grid, "algorithm": algorithm, "seed": 42}

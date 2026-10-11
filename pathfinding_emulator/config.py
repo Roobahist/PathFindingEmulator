@@ -4,6 +4,8 @@ import math
 from dataclasses import dataclass
 from pathlib import Path
 
+from .agents import ALGORITHMS
+
 PACKAGE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = PACKAGE_DIR / "assets"
 SAMPLE_MAPS_DIR = PACKAGE_DIR / "sample_maps"
@@ -30,8 +32,10 @@ class Settings:
             raise ValueError("cell_size must be between 20 and 100 pixels")
         if not math.isfinite(self.delay) or not 0 <= self.delay <= 99:
             raise ValueError("delay must be between 0 and 99 seconds")
-        if self.algorithm not in {"random", "A_Star", "IDS"}:
-            raise ValueError("algorithm must be random, A_Star, or IDS")
+        if self.algorithm not in ALGORITHMS:
+            raise ValueError(
+                "algorithm must be random, A_Star, IDS, BFS, DFS, or Greedy"
+            )
         object.__setattr__(self, "maps_dir", Path(self.maps_dir).expanduser().resolve())
 
 

@@ -15,7 +15,7 @@
     {
       "path": "docs/screenshots/web-playback.jpg",
       "origin": "http://127.0.0.1:8765",
-      "view": "Map 10, wood and stone, frame 1 of 2, cost 5"
+      "view": "Map 10, grass and water, BFS, vector arrow, frame 1 of 2, cost 5"
     }
   ],
   "original_artwork": [

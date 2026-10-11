@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-11T21:08:21.738627+00:00",
+  "generatedAt": "2026-10-11T21:29:45.502158+00:00",
   "title": "Design System: PathFinding Emulator",
   "extensions": {
     "colorMeta": {
@@ -218,7 +218,7 @@
     "typographyMeta": {
       "headline": {
         "displayName": "Map title",
-        "purpose": "Map heading, with a smaller narrow-screen size."
+        "purpose": "Map heading; 25px in the desktop single-viewport layout and 24px at the narrow breakpoint."
       },
       "title": {
         "displayName": "Section heading",
@@ -242,6 +242,16 @@
         "name": "board",
         "value": "0 18px 38px #0008",
         "purpose": "Diffuse depth behind the original artwork grid."
+      },
+      {
+        "name": "board-config-overlay",
+        "value": "0 12px 24px #0008",
+        "purpose": "Anchored new-board settings on desktop at least 1000 × 700."
+      },
+      {
+        "name": "push-marker",
+        "value": "drop-shadow(0 2px 2px #0009)",
+        "purpose": "Separate the white movement arrow from vivid tile textures."
       }
     ],
     "motion": [
@@ -273,6 +283,32 @@
       {
         "name": "single-column",
         "value": "760px"
+      },
+      {
+        "name": "single-viewport-desktop",
+        "value": "(min-width:1000px) and (min-height:700px)"
+      },
+      {
+        "name": "short-desktop",
+        "value": "(min-width:1000px) and (min-height:700px) and (max-height:850px)"
+      },
+      {
+        "name": "shortest-desktop",
+        "value": "(min-width:1000px) and (min-height:700px) and (max-height:750px)"
+      }
+    ],
+    "responsiveExceptions": [
+      {
+        "condition": "(min-width:1000px) and (min-height:700px)",
+        "description": "100dvh flex page; one-row header; flexible stage plus 64px transport row; board fits arena width and height with square cells and 650px width cap. Main padding 16px 24px 10px, workspace gaps 14px 20px, inspector padding 16px; section margin/padding 16px. New-board settings use an anchored overlay."
+      },
+      {
+        "condition": "(min-width:1000px) and (min-height:700px) and (max-height:850px)",
+        "description": "Inspector padding and section margin/padding 12px; four-column palette with 26px thumbnails; redundant helper text and shortcut labels hidden; artwork and solve controls at least 44px high."
+      },
+      {
+        "condition": "(min-width:1000px) and (min-height:700px) and (max-height:750px)",
+        "description": "Section margin/padding 8px; summary margin 10px and top padding 8px."
       }
     ]
   },
@@ -306,8 +342,8 @@
       "kind": "input",
       "refersTo": "field",
       "description": "Full-width inspector field with local search choices.",
-      "html": "<label class=\"ds-field-label\">Find a solution with<select class=\"ds-field\"><option>A* \u00b7 Lowest movement cost</option><option>IDS \u00b7 Fewest pushes</option><option>Random \u00b7 Explore legal moves</option></select></label>",
-      "css": ".ds-field-label{font-family:Plex,system-ui,sans-serif;font-size:16px;display:grid;gap:8px;color:var(--muted,#aeb7c8);font-size:13px}.ds-field{font-family:Plex,system-ui,sans-serif;font-size:16px;font-size:13px;min-height:44px;background:var(--raised,#21252e);border:1px solid var(--border,#343945);border-radius:8px;color:var(--text,#f7f8fb);padding:0 30px 0 12px;cursor:pointer}.ds-field:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}"
+      "html": "<label class=\"ds-field-label\">Find a solution with<select class=\"ds-field\"><option>A* · Lowest movement cost</option><option>IDS · Fewest pushes</option><option>Breadth-first · Fewest pushes</option><option>Depth-first · Explore deeply</option><option>Greedy · Follow nearby holes</option><option>Random · Explore legal moves</option></select></label>",
+      "css": ".ds-field-label{font-family:Plex,system-ui,sans-serif;font-size:16px;display:grid;gap:8px;color:var(--muted,#aeb7c8);font-size:13px}.ds-field{font-family:Plex,system-ui,sans-serif;font-size:16px;font-size:13px;min-height:44px;background:var(--raised,#21252e);border:1px solid var(--border,#343945);border-radius:8px;color:var(--text,#f7f8fb);padding:0 30px 0 12px;cursor:pointer}.ds-field:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;} .ds-field{appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23f7f8fb%27 stroke-width=%271.8%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center;padding-right:42px}"
     },
     {
       "name": "Workspace Modes",
@@ -322,7 +358,7 @@
       "refersTo": "inspector",
       "description": "Quiet container for named tool sections.",
       "html": "<section class=\"ds-inspector\"><h2>Build your board</h2><p>Choose a tile, then paint the grid.</p></section>",
-      "css": ".ds-inspector{font-family:Plex,system-ui,sans-serif;font-size:16px;background:var(--surface,#161920);border-radius:var(--radius,12px);padding:22px 20px;color:var(--text,#f7f8fb)}.ds-inspector h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.015em}.ds-inspector p{margin:7px 0 0;font-size:14px;line-height:1.55;color:var(--muted,#aeb7c8)}"
+      "css": ".ds-inspector{font-family:Plex,system-ui,sans-serif;font-size:16px;background:var(--surface,#161920);border-radius:var(--radius,12px);padding:22px 20px;color:var(--text,#f7f8fb)}.ds-inspector h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.015em}.ds-inspector p{margin:7px 0 0;font-size:14px;line-height:1.55;color:var(--muted,#aeb7c8)} @media(min-width:1000px) and (min-height:700px){.ds-inspector{padding:16px}}@media(min-width:1000px) and (min-height:700px) and (max-height:850px){.ds-inspector{padding:12px}.ds-inspector p{display:none}}"
     },
     {
       "name": "Playback Button",
@@ -331,11 +367,18 @@
       "description": "High-contrast icon control for playback; source path is inlined.",
       "html": "<button class=\"ds-play\" aria-label=\"Play solution\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m8 5 11 7-11 7Z\"/></svg></button>",
       "css": ".ds-play{font-family:Plex,system-ui,sans-serif;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 16px;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;width:44px;padding:0;background:var(--text,#f7f8fb);color:var(--bg,#0c0e13)}.ds-play svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-play:hover{background:#ffd1bd}.ds-play:focus-visible{outline:2px solid var(--accent,#ff794d);outline-offset:4px;}.ds-play:active:not(:disabled){transform:translateY(1px)}.ds-play:disabled{cursor:default;opacity:.4}"
+    },
+    {
+      "name": "Push Direction Marker",
+      "kind": "custom",
+      "description": "Large white SVG arrow over a translucent dark circle; rotate to match the last push direction.",
+      "html": "<svg class=\"ds-push-marker\" viewBox=\"0 0 100 100\" role=\"img\" aria-label=\"Pushed right\"><path d=\"M18 50H79M54 25L79 50L54 75\"/></svg>",
+      "css": ".ds-push-marker{width:84%;height:auto;aspect-ratio:1;overflow:visible;pointer-events:none;fill:none;stroke:#fff;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px #0009);background:#171d2ddd;border-radius:50%}.ds-push-marker path{paint-order:stroke;stroke:#fff}.ds-push-marker.ds-left{transform:rotate(180deg)}.ds-push-marker.ds-up{transform:rotate(-90deg)}.ds-push-marker.ds-down{transform:rotate(90deg)}"
     }
   ],
   "narrative": {
     "northStar": "The Textured Puzzle Workspace",
-    "overview": "The Textured Puzzle Workspace places the original saturated puzzle artwork inside a dark, sleek control surface. Grass, water, lava, wood and stone supply the visual character; the interface uses quiet charcoal layers, readable labels and warm orange actions to make the artwork easy to inspect.\n\nThis records the shipped local browser interface. It replaces the rejected washed-out geometric presentation. Original raster textures and directional sprites remain the source of identity; the optional desktop interface is a separate retained presentation, not the source of these browser tokens.",
+    "overview": "The Textured Puzzle Workspace places the original saturated puzzle artwork inside a dark, sleek control surface. Grass, water, lava, wood and stone supply the visual character; the interface uses quiet charcoal layers, readable labels and warm orange actions to make the artwork easy to inspect.\n\nThis records the shipped local browser interface. It replaces the rejected washed-out geometric presentation. Original raster textures remain the source of identity, while browser playback uses a large directional SVG arrow; the optional desktop interface is a separate retained presentation, not the source of these browser tokens.",
     "keyCharacteristics": [
       "Original texture artwork remains prominent and unchanged.",
       "Compact charcoal controls frame vivid puzzle imagery.",
@@ -360,11 +403,11 @@
       }
     ],
     "dos": [
-      "Do preserve original tile and directional sprite files byte-for-byte.",
+      "Do preserve original tile and retained legacy directional sprite files byte-for-byte; use the SVG arrow for browser playback.",
       "Do pair artwork previews with accessible names and pressed states.",
-      "Do maintain the visible orange focus outline and the board\u2019s keyboard navigation.",
+      "Do maintain the visible orange focus outline and the board’s keyboard navigation.",
       "Do use truthful solver and playback messages based on the current engine result.",
-      "Do disable motion under the user\u2019s reduced-motion preference."
+      "Do disable motion under the user’s reduced-motion preference."
     ],
     "donts": [
       "Don't replace the original textures with washed-out geometric tiles.",

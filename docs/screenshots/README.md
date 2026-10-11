@@ -4,8 +4,8 @@ The web-editor, web-lava and web-playback JPEG files were captured from the actu
 local app with browser automation. They are not generated mockups. Start the app
 with `python Main.py --algorithm A_Star --delay 0.5 --no-browser`, open the printed
 local URL, and use a desktop viewport for the editor and lava artwork screenshots.
-For playback, open map_10, choose Wood & stone, solve, reset and step once; the
-frame shows one remaining box, one push and movement cost 5.
+For playback, open map_10, choose Grass & water and BFS, solve, reset and step once; the
+large vector arrow marks the push. The frame shows one remaining box, one push and movement cost 5.
 
 The review also covers narrow-screen layouts, keyboard painting, undo, save,
 creation, theme switching, playback and returning to the original board. Asset

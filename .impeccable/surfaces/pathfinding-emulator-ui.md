@@ -26,13 +26,15 @@ and return to the original editable board. Every transition uses the Python rule
 
 FIRST VIEWPORT: Compact horizontal navigation and file actions. The textured
 board occupies the largest region, with palette, artwork and solver in a right
-inspector. Playback transport sits directly below the board. Narrow screens put
+inspector. At least 1000 × 700 fits one viewport height, including rectangular
+boards with square cells. Playback transport sits directly below the board. Narrow screens put
 the board above tools; controls remain available without horizontal scrolling.
 
 FORM: User-pinned original textures. Signature interaction: painting changes the
 actual texture under the cursor; changing artwork immediately reskins the same
 board. Playback scrubs real engine frames, flashes changed cells briefly, and
-shows the original directional sprite on the last pushed cell. Reduced-motion
+shows a large white SVG arrow on a dark circular backing on the last pushed cell.
+Select chevrons sit 14px in from the right edge. Reduced-motion
 preferences remove the flash. No washed-out geometric replacement tiles.
 
 FINISH: Real browser captures at desktop, narrow and user viewport; fresh finish

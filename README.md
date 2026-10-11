@@ -14,8 +14,9 @@ including an actual solver frame, rather than design mockups.
 
 | Lava artwork | Inspect a solution |
 |---|---|
-| ![Original lava and chest textures in the editor](docs/screenshots/web-lava.jpg) | ![Paused solution with directional sprite, cost and timeline](docs/screenshots/web-playback.jpg) |
+| ![Original lava and chest textures in the editor](docs/screenshots/web-lava.jpg) | ![Paused solution with large direction arrow, cost and timeline](docs/screenshots/web-playback.jpg) |
 
+Desktop windows at least 1000 × 700 fit the workspace in one screen height.
 The interface adapts to narrow windows and provides keyboard board editing,
 undo, live artwork previews, pause, step, reset and timeline scrubbing.
 See [screenshot capture notes](docs/screenshots/README.md).
@@ -69,6 +70,10 @@ calls; supported agents choose only pushes that change the board.
 - `IDS`: iterative deepening with path-cycle prevention, minimizing action
   count within configured limits, rather than movement cost.
 
+- `BFS`: breadth-first search, minimizing pushes within the depth limit.
+- `DFS`: depth-first search, exploring one branch at a time; no optimality guarantee.
+- `Greedy`: prioritizes boxes near holes using Manhattan distance; no optimality guarantee.
+
 No-solution and resource-limit errors are distinct. A limit means solvability
 is unknown. Large boards can require substantial search time and memory.
 Random generation is bounded and does **not** guarantee solvability.
@@ -81,7 +86,7 @@ and click or drag to paint; right-click erases. Borders stay holes or stones.
 Undo restores the previous edit. Save map creates a new JSON file in `--maps-dir`.
 There are no tile quotas in the browser editor.
 
-Choose Random, A* or IDS, then Solve & play. Pause, step forward, reset, or scrub
+Choose Random, A*, IDS, BFS, DFS or Greedy, then Solve & play. Pause, step forward, reset, or scrub
 through the real solution frames. Pace adjusts the time between pushes. Returning
 to Editor restores the original edited board; editing discards the old solution.
 Search and replay are bounded; errors explain when a board is unsolvable or a
@@ -110,14 +115,14 @@ variables or configuration files. Settings are validated once at startup.
 | `--map` | none | File path or bundled sample name |
 | `--height`, `--width` | 2, 2 | Interior size when generating a headless board |
 | `--maps-dir` | `maps` in the launch directory | Directory for new JSON maps |
-| `--algorithm` | `random` | `random`, `A_Star`, or `IDS` |
+| `--algorithm` | `random` | `random`, `A_Star`, `IDS`, `BFS`, `DFS`, `Greedy` |
 | `--seed` | system randomness | Reproducible generation and random agent choices |
 | `--cell-size` | 50 | Requested Pygame tile size, 20–100 pixels |
 | `--delay` | 1 | Seconds between actions, 0–99 |
 | `--fps` | 60 | Positive Pygame frame-rate cap |
 | `--max-steps` | 10000 | Maximum executed simulation actions |
 | `--max-nodes` | 50000 | Maximum expanded search states |
-| `--max-depth` | 100 | Maximum IDS action depth |
+| `--max-depth` | 100 | Maximum IDS, BFS and DFS action depth |
 
 `--map` takes precedence over generated dimensions. Explicit files are loaded
 first. Extensionless names try JSON then legacy pickle. Bare names and relative
@@ -155,7 +160,7 @@ python tools/check_wheel.py
 python -m pip_audit -r requirements.txt --disable-pip --no-deps
 ```
 
-Tests exercise simulator scoring, all 2×2 interior tile arrangements for both
+Tests exercise simulator scoring, all 2×2 interior tile arrangements for all five deterministic
 searches, map security and concurrency, seeded generation, CLI failures, and
 HTTP endpoints, replay/engine parity, static browser assets, exclusive saves,
 and real Pygame screens with SDL dummy drivers. GUI tests skip explicitly if Pygame

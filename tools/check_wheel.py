@@ -18,6 +18,7 @@ with zipfile.ZipFile(wheels[0]) as archive:
     assert sum(name.endswith((".png", ".jpg")) for name in names) == 37
     for asset in (
         "web/index.html",
+        "web/chevron.svg",
         "web/styles.css",
         "web/app.js",
         "assets/fonts/IBMPlexSans-Regular.ttf",
@@ -70,7 +71,7 @@ thread = threading.Thread(target=server.serve_forever, daemon=True)
 thread.start()
 try:
     url = f'http://127.0.0.1:{server.server_port}'
-    for asset in ('/', '/app.js', '/styles.css', '/assets/env/3/box.jpg', '/assets/fonts/IBMPlexSans-Regular.ttf'):
+    for asset in ('/', '/app.js', '/chevron.svg', '/styles.css', '/assets/env/3/box.jpg', '/assets/fonts/IBMPlexSans-Regular.ttf'):
         with urlopen(url + asset) as response:
             assert response.status == 200 and response.read()
     with urlopen(url + '/api/bootstrap') as response:

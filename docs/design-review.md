@@ -19,3 +19,7 @@ resetting, stepping and resuming from the editor. The server's tests replay ever
 returned action through the Python engine and compare grid and cost at each step.
 All 37 original artwork files and 14 original sample maps were compared to the
 repository baseline and remain byte-identical.
+
+## Requested solver and viewport refinements
+
+Fresh Impeccable review checked inset chevrons, BFS/DFS/greedy choices, larger vector direction marker and a single-height desktop workspace. Corrected the new-board choices, exact rectangular sizing, 12px solver guidance and persisted design documentation in one batch. Complete actual captures include 1000 × 700, 1366 × 768, 1920 × 1080, 390px and 720px layouts plus tall/wide maps. Transient capture clipping and a not-yet-loaded artwork preview were recaptured. Final disposition: `ship`; scored fixes resolved, no remaining regressions in that scope.

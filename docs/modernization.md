@@ -267,3 +267,7 @@ tests cover static files, fonts, library access, creation, validation, exclusive
 saves, rejected foreign origins, unsolvable boards, and replay/engine scoring
 parity. Installed-wheel checks exercise the browser server without Pygame. Real
 browser screenshots replace the older README images.
+
+## Solver and viewport refinements
+
+Added BFS (fewest pushes), DFS and greedy search with bounded expansion and replay parity. Inset browser select chevrons by 14px and replaced the old hand pointer with a large SVG direction arrow. At 1000 × 700 or larger, the desktop workspace fits one viewport height; exact board width and height preserve square cells for tall and wide maps. Smaller screens retain scrolling. All five deterministic planners are exercised on every 2 × 2 tile arrangement; 40 tests pass.

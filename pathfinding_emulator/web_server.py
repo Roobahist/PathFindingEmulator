@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from .agents import Agent, SearchLimitError
+from .agents import ALGORITHMS, Agent, SearchLimitError
 from .config import ASSETS_DIR, PACKAGE_DIR, SAMPLE_MAPS_DIR
 from .environment import Env, base_map, validate_map
 from .maps import ChallengeDesigner
@@ -26,8 +26,8 @@ def browser_grid(grid):
 
 
 def replay(grid, algorithm, settings, seed=None):
-    if algorithm not in {"random", "A_Star", "IDS"}:
-        raise ValueError("Choose random, A_Star or IDS")
+    if algorithm not in ALGORITHMS:
+        raise ValueError("Choose a supported solver")
     env = Env(browser_grid(grid))
     agent = Agent(
         env.send_map,
@@ -132,6 +132,7 @@ def make_server(settings, designer, initial_map=None, port=0):
                 self.send_error(HTTPStatus.NOT_FOUND)
                 return
             types = {
+                ".svg": "image/svg+xml",
                 ".html": "text/html; charset=utf-8",
                 ".css": "text/css",
                 ".js": "text/javascript",

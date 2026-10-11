@@ -53,6 +53,7 @@ function themePicker() {
 function render() {
   if (!state.grid.length) return;
   const grid = state.grid, rows = grid.length, cols = grid[0].length;
+  requestAnimationFrame(fitBoard);
   const previous = state.frames[state.frame - 1]?.grid;
   $('board').style.setProperty('--cols', cols); $('board').style.setProperty('--rows', rows);
   $('board').style.gridTemplateColumns = `repeat(${cols},1fr)`;
@@ -78,7 +79,7 @@ function render() {
       if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); paint(r, c, 0); }
     };
     const action = state.mode === 'play' ? state.frames[state.frame]?.action : null;
-    if (action && action.row === r && action.col === c) { const arrow = document.createElement('img'); arrow.src = `/assets/agent/${state.theme}/${action.direction}.png`; arrow.className = 'push-direction'; arrow.alt = `Pushed ${action.direction}`; cell.append(arrow); }
+    if (action && action.row === r && action.col === c) { const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); arrow.setAttribute('viewBox', '0 0 100 100'); arrow.setAttribute('class', `push-marker ${action.direction}`); arrow.setAttribute('role', 'img'); arrow.setAttribute('aria-label', `Pushed ${action.direction}`); arrow.innerHTML = '<path d="M18 50H79M54 25L79 50L54 75"/>'; cell.append(arrow); }
     gridRow.append(cell);
     }); $('board').append(gridRow);
   });
@@ -159,3 +160,16 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape') { $('board-config').hidden = true; if (state.mode === 'play') setMode('edit'); }
 });
 (async () => { try { const initial = await api('/api/bootstrap'); state.seed = initial.seed; loadGrid(initial.grid, initial.title); $('algorithm').value = initial.algorithm; $('speed').value = String(initial.delay * 1000); if (!$('speed').value) { const pace = new Option(`${initial.delay}s`, String(initial.delay * 1000)); $('speed').append(pace); $('speed').value = pace.value; }; palette(); themePicker(); await library(); } catch (error) { feedback(error.message, true); } })();
+
+function fitBoard() {
+  const board = $('board'), arena = document.querySelector('.arena');
+  if (!state.grid.length || !matchMedia('(min-width: 1000px) and (min-height: 700px)').matches) { board.style.width = ''; board.style.height = ''; return; }
+  const padding = getComputedStyle(arena);
+  const width = arena.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
+  const height = arena.clientHeight - parseFloat(padding.paddingTop) - parseFloat(padding.paddingBottom);
+  const rows = state.grid.length, cols = state.grid[0].length;
+  const cell = Math.max(1, Math.min((width - 14 - 2 * (cols - 1)) / cols, (height - 14 - 2 * (rows - 1)) / rows, (650 - 14 - 2 * (cols - 1)) / cols));
+  board.style.width = `${cell * cols + 2 * (cols - 1) + 14}px`;
+  board.style.height = `${cell * rows + 2 * (rows - 1) + 14}px`;
+}
+new ResizeObserver(fitBoard).observe(document.querySelector('.arena'));
