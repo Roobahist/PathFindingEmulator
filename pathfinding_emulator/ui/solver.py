@@ -56,8 +56,8 @@ class Solver:
         mapArr = game.previous_map
         ui.header(
             self.page,
-            "Watch the solution unfold.",
-            "Follow each push. Adjust the pace or return to edit your board.",
+            "Solver",
+            "Adjust the delay between pushes or return to the editor.",
             "simulation",
         )
         ui.panel(self.page, self.board_area)
@@ -152,25 +152,35 @@ class Solver:
         ui.button(self.page, self.decrease_button, "−")
         ui.button(self.page, self.increase_button, "+")
         self.delayinput.draw(self.page)
-        ui.button(self.page, self.back_button, "Return to editor / Esc")
+        ui.button(self.page, self.back_button, "Return to editor")
 
     def drawTexts(self, state):
         ui.panel(self.page, self.sidebar)
         x = self.sidebar.x + 20
-        ui.text(self.page, "RUN OVERVIEW", (x, 154), 14, ui.ACCENT, True)
-        ui.text(self.page, self.status, (x, 192), 25, ui.ACCENT, True)
-        ui.text(self.page, "TOTAL MOVEMENT COST", (x, 244), 14, ui.MUTED)
-        ui.text(self.page, state.cost, (x, 268), 40, bold=True)
+        ui.text(self.page, "Run", (x, 154), 17, bold=True)
+        ui.text(self.page, self.status, (x, 192), 19, bold=True)
+        pg.draw.line(self.page, ui.BORDER, (x, 230), (x + 224, 230))
         boxes = sum(row.count(1) for row in state.map_array)
+        for y, label, value in (
+            (254, "Movement cost", state.cost),
+            (294, "Actions", self.steps),
+            (334, "Boxes left", boxes),
+        ):
+            ui.text(self.page, label, (x, y), 16, ui.MUTED)
+            image = pg.font.SysFont("Arial", 18, bold=True).render(
+                str(value), True, ui.TEXT
+            )
+            self.page.blit(image, image.get_rect(topright=(x + 224, y)))
+        pg.draw.line(self.page, ui.BORDER, (x, 374), (x + 224, 374))
+        ui.text(self.page, "Delay (seconds)", (x, 392), 16)
+        ui.text(self.page, "− faster    + slower", (x, 492), 15, ui.MUTED)
         ui.text(
             self.page,
-            f"{self.steps} actions  /  {boxes} boxes left",
-            (x, 338),
-            17,
+            "Esc  Return to editor",
+            (32, self.page.get_height() - 44),
+            14,
             ui.MUTED,
         )
-        ui.text(self.page, "SECONDS BETWEEN PUSHES", (x, 392), 14, ui.MUTED)
-        ui.text(self.page, "− faster     + slower", (x, 492), 17, ui.MUTED)
 
     def colorCube(self, i, j, celltype):
         self.page.blit(

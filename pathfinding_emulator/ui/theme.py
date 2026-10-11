@@ -2,14 +2,14 @@
 
 import pygame as pg
 
-BG = (15, 21, 32)
-PANEL = (24, 33, 47)
-FIELD = (34, 45, 62)
-BORDER = (65, 83, 104)
-TEXT = (239, 245, 250)
-MUTED = (169, 186, 205)
-ACCENT = (91, 226, 191)
-INK = (12, 38, 34)
+BG = (250, 250, 249)
+PANEL = (255, 255, 255)
+FIELD = (239, 240, 241)
+BORDER = (180, 184, 190)
+TEXT = (30, 33, 38)
+MUTED = (89, 94, 102)
+ACCENT = (35, 78, 121)
+INK = (255, 255, 255)
 
 
 def text(screen, label, pos, size=20, color=TEXT, bold=False):
@@ -20,7 +20,7 @@ def text(screen, label, pos, size=20, color=TEXT, bold=False):
 
 
 def panel(screen, rect, color=PANEL):
-    pg.draw.rect(screen, color, rect, border_radius=16)
+    pg.draw.rect(screen, color, rect, border_radius=0)
 
 
 def button(screen, rect, label, primary=False, selected=False):
@@ -31,18 +31,27 @@ def button(screen, rect, label, primary=False, selected=False):
         ACCENT if selected else BORDER,
         rect,
         2 if selected else 1,
-        border_radius=12,
+        border_radius=4,
     )
-    font = pg.font.SysFont("Arial", 18, bold=True)
+    font = pg.font.SysFont("Arial", 17)
     image = font.render(label, True, INK if primary else TEXT)
     screen.blit(image, image.get_rect(center=rect.center))
 
 
 def header(screen, title, subtitle, section):
     screen.fill(BG)
-    text(screen, "PATHFINDING / " + section.upper(), (32, 22), 14, ACCENT, True)
-    text(screen, title, (32, 48), 30, bold=True)
-    text(screen, subtitle, (32, 88), 17, MUTED)
+    pg.draw.rect(screen, PANEL, (0, 0, screen.get_width(), 52))
+    text(screen, "PathFinding", (32, 16), 17, bold=True)
+    text(screen, "/  " + section.capitalize(), (146, 17), 16, MUTED)
+    pg.draw.line(screen, BORDER, (0, 52), (screen.get_width(), 52))
+    text(screen, title, (32, 72), 23, bold=True)
+    text(screen, subtitle, (32, 104), 15, MUTED)
+    pg.draw.line(
+        screen,
+        BORDER,
+        (32, screen.get_height() - 64),
+        (screen.get_width() - 32, screen.get_height() - 64),
+    )
 
 
 def workspace(cols, rows, size):
@@ -58,7 +67,10 @@ def workspace(cols, rows, size):
 
 def notice(screen, message):
     if message:
-        # Wrap instead of shrinking text, preserving readable error messages.
+        pg.draw.rect(
+            screen, BG, (32, screen.get_height() - 63, screen.get_width() - 64, 63)
+        )
+        # Replace the footer hints with readable, wrapped feedback.
         words, line, lines = str(message).split(), "", []
         font = pg.font.SysFont("Arial", 17)
         for word in words:

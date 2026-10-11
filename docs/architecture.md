@@ -90,8 +90,8 @@ limit is a work bound, not a hard resident-memory quota.
 
 ## Desktop presentation
 
-The launcher, setup forms, editor and solver share `ui/theme.py` for palette,
-typography, panels, buttons and workspace geometry. Board rendering accepts an
+The launcher, setup forms, editor and solver share `ui/theme.py` for a neutral light palette,
+typography, surfaces, buttons and workspace geometry. Board rendering accepts an
 origin so drawing and pointer hit testing use the same centered rectangle.
 Original artwork remains in the four existing themes. The desktop workspace is
 at least 960 × 680 pixels; large boards grow it as needed, with cell sizes fitted

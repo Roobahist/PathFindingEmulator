@@ -5,7 +5,10 @@ import sys
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame as pg
 
+from ..config import SAMPLE_MAPS_DIR
+from ..maps import load_map
 from . import theme as ui
+from .tiles import draw_board, load_tiles
 
 
 class InputBox:
@@ -25,7 +28,7 @@ class InputBox:
             ui.ACCENT if self.active else ui.BORDER,
             self.rect,
             2 if self.active else 1,
-            border_radius=12,
+            border_radius=4,
         )
         self.txt_surface = self.font.render(self.text, True, ui.TEXT)
         old_clip = screen.get_clip()
@@ -40,16 +43,16 @@ class InputBox:
 
 class GUI:
     titles = (
-        "Every puzzle starts with a board.",
+        "Boards",
         "Open a saved board",
-        "Make something unexpected",
-        "Build your next challenge",
+        "Random board",
+        "New board",
     )
     descriptions = (
-        "Design, experiment, and watch the solution unfold.",
+        "Open an existing puzzle or create a new one.",
         "Load a JSON file or a bundled sample such as map_10.",
-        "Choose your dimensions. We will generate the tiles.",
-        "Choose the board size and how many tiles to place.",
+        "Set the dimensions for a generated puzzle.",
+        "Set the dimensions and number of tiles to place.",
     )
     labels = (
         (),
@@ -75,8 +78,10 @@ class GUI:
         self.default_env_style, self.default_agent_style = env_style, agent_style
         self.env_style, self.agent_style = env_style, agent_style
         self.navigation_buttons = [
-            pg.Rect(32 + i * 304, 250, 288, 240) for i in range(3)
+            pg.Rect(48, 220 + i * 100, 384, 88) for i in range(3)
         ]
+        self.preview_grid = load_map(SAMPLE_MAPS_DIR / "map_1.pickle")
+        self.preview_tiles = load_tiles(env_style, 48)
         self.back_button = pg.Rect(56, 550, 150, 48)
         self.submit_button = pg.Rect(692, 550, 212, 48)
         self.page_buttons = self.make_input_boxes()
@@ -100,7 +105,7 @@ class GUI:
             result[page] = [
                 InputBox(
                     56 + (i % 4) * 216,
-                    270 + (i // 4) * 110,
+                    242 + (i // 4) * 100,
                     200,
                     48,
                     text=value,
@@ -116,13 +121,12 @@ class GUI:
         if page == 0:
             self.main_page()
         else:
-            ui.panel(self.page, pg.Rect(32, 160, 896, 460))
             ui.text(
                 self.page,
-                ("LOAD BOARD", "RANDOM BOARD", "CUSTOM BOARD")[page - 1],
+                ("File", "Board settings", "Board settings")[page - 1],
                 (56, 185),
-                14,
-                ui.ACCENT,
+                17,
+                ui.TEXT,
                 True,
             )
             if page == 3:
@@ -135,7 +139,7 @@ class GUI:
                 17,
                 ui.MUTED,
             )
-            ui.button(self.page, self.back_button, "Back / Esc")
+            ui.button(self.page, self.back_button, "Back")
             ui.button(
                 self.page,
                 self.submit_button,
@@ -146,57 +150,36 @@ class GUI:
         pg.display.update()
 
     def main_page(self):
-        ui.text(self.page, "YOUR NEXT MOVE", (32, 198), 14, ui.ACCENT, True)
-        titles = ("Load a board", "Random board", "Design a board")
+        ui.text(self.page, "Open or create", (48, 172), 17, bold=True)
+        titles = ("Open board", "Random board", "New board")
         details = (
-            ("Pick up a saved puzzle", "or explore a sample map."),
-            ("Start with a fresh layout.", "A new challenge every time."),
-            ("Place every box and stone.", "Make the puzzle your own."),
+            "Load a saved file or a sample map.",
+            "Generate a board with random tiles.",
+            "Set the size and place tiles yourself.",
         )
         for index, rect in enumerate(self.navigation_buttons):
-            ui.panel(
-                self.page,
-                rect,
-                ui.FIELD if rect.collidepoint(pg.mouse.get_pos()) else ui.PANEL,
-            )
-            pg.draw.rect(self.page, ui.BORDER, rect, 1, border_radius=16)
+            if rect.collidepoint(pg.mouse.get_pos()):
+                ui.panel(self.page, rect, ui.FIELD)
+            ui.text(self.page, titles[index], (rect.x + 16, rect.y + 15), 19, bold=True)
+            ui.text(self.page, details[index], (rect.x + 16, rect.y + 46), 15, ui.MUTED)
             ui.text(
-                self.page,
-                "0" + str(index + 1),
-                (rect.x + 24, rect.y + 24),
-                36,
-                ui.ACCENT,
-                True,
+                self.page, str(index + 1), (rect.right - 32, rect.y + 18), 16, ui.MUTED
             )
-            ui.text(self.page, titles[index], (rect.x + 24, rect.y + 90), 23, bold=True)
-            for line, label in enumerate(details[index]):
-                ui.text(
-                    self.page,
-                    label,
-                    (rect.x + 24, rect.y + 132 + line * 25),
-                    17,
-                    ui.MUTED,
-                )
-            ui.text(
+            pg.draw.line(
                 self.page,
-                "Get started  >",
-                (rect.x + 24, rect.y + 199),
-                17,
-                ui.ACCENT,
-                True,
+                ui.BORDER,
+                (rect.x + 16, rect.bottom),
+                (rect.right - 16, rect.bottom),
             )
+        pg.draw.line(self.page, ui.BORDER, (480, 172), (480, 560))
+        ui.text(self.page, "Sample board", (532, 172), 17, bold=True)
+        draw_board(self.page, self.preview_grid, self.preview_tiles, 48, (532, 218))
+        ui.text(self.page, "map_1 · 5 × 5 interior", (532, 573), 15, ui.MUTED)
         ui.text(
             self.page,
-            "01  CREATE     /     02  EDIT     /     03  SOLVE",
-            (32, 550),
-            18,
-            ui.MUTED,
-        )
-        ui.text(
-            self.page,
-            "Press 1, 2 or 3 to choose a workflow. Tab to move between form fields.",
-            (32, 592),
-            17,
+            "1–3  Choose a workflow     Tab  Next field     Enter  Continue",
+            (32, 636),
+            15,
             ui.MUTED,
         )
 

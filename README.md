@@ -7,7 +7,7 @@ The four original artwork themes remain available.
 
 ## A modern desktop workspace
 
-A consistent dark interface pairs a centered puzzle board with clear editing
+A restrained desktop interface pairs a centered puzzle board with clear editing
 controls and live run statistics. These are **actual screenshots of the Pygame
 application**, captured from the screens in this repository.
 

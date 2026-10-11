@@ -105,29 +105,50 @@ class MapEditor:
     def redrawPage(self):
         ui.header(
             self.page,
-            "Shape the challenge.",
-            "Select a tile, then click the board. Click a placed tile to remove it.",
+            "Map editor",
+            "Select a tile to place it. Click a placed tile to remove it.",
             "editor",
         )
         ui.panel(self.page, self.board_area)
         ui.panel(self.page, self.sidebar)
         self.drawTile(self.map)
         self.drawButtons()
+        ui.text(
+            self.page,
+            "H / S / B  Select tile     Enter  Solve     Esc  Back to boards",
+            (32, self.page.get_height() - 44),
+            14,
+            ui.MUTED,
+        )
         self.drawMessage()
         pg.display.update()
 
     def drawButtons(self):
-        ui.text(
-            self.page, "TILE PALETTE", (self.sidebar.x + 20, 154), 14, ui.ACCENT, True
-        )
+        ui.text(self.page, "Tiles", (self.sidebar.x + 20, 154), 17, ui.TEXT, True)
         for index, (rect, name, key) in enumerate(
             zip(self.tile_buttons, ("Hole", "Stone", "Box"), ("H", "S", "B"))
         ):
-            ui.button(
+            selected = self.active_buttons[index]
+            if selected or rect.collidepoint(pg.mouse.get_pos()):
+                ui.panel(self.page, rect, ui.FIELD)
+            pg.draw.circle(
                 self.page,
-                rect,
-                f"{name}  [{key}]       {self.remained[index]} left",
-                selected=self.active_buttons[index],
+                ui.ACCENT if selected else ui.BORDER,
+                (rect.x + 13, rect.centery),
+                6,
+                0 if selected else 1,
+            )
+            self.page.blit(
+                (self.small_hole, self.small_stone, self.small_box)[index],
+                (rect.x + 32, rect.y + 13),
+            )
+            ui.text(self.page, name, (rect.x + 70, rect.y + 16), 17)
+            ui.text(
+                self.page,
+                f"{self.remained[index]} left",
+                (rect.right - 48, rect.y + 17),
+                14,
+                ui.MUTED,
             )
         ui.text(
             self.page,
@@ -138,7 +159,7 @@ class MapEditor:
         )
         for rect, label in zip(
             self.control_buttons,
-            ("Solve board / Enter", "Save JSON", "New board / Esc"),
+            ("Solve", "Save JSON", "Back to boards"),
         ):
             ui.button(self.page, rect, label, primary=rect == self.control_buttons[0])
 

@@ -244,3 +244,11 @@ boxes and movement cost. Board coordinate handling includes the new origin.
 Original artwork and simulation rules remain intact. The README includes four
 real Pygame screenshots and a reproducible capture command. The earlier source
 line counts describe the initial modernization, before this UI follow-up.
+
+### Visual refinement
+
+The initial dark presentation was revised after design feedback. The current
+interface uses neutral light surfaces, thin separators, small corner radii,
+compact typography and direct labels. Launcher choices are plain rows beside
+an actual bundled sample board. Editing tools and solver statistics use aligned
+lists. The four README screenshots were recaptured from this version.
