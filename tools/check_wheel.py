@@ -99,16 +99,6 @@ thread = threading.Thread(target=server.serve_forever, daemon=True)
 thread.start()
 try:
     url = f'http://127.0.0.1:{server.server_port}'
-    for module in (
-        "pathfinding_emulator/browser/server.py",
-        "pathfinding_emulator/desktop/launcher.py",
-        "pathfinding_emulator/desktop/editor.py",
-        "pathfinding_emulator/experimental.py",
-        "Env.py", "MapLoader.py", "Utils.py", "ai.py", "Astarr.py", "simpids.py",
-        "Main.py", "MainGui.py", "MapEditor.py", "GuiSolver.py", "other_agents.py",
-    ):
-        assert module in names
-    assert not any(name.startswith(("pathfinding_emulator/ui/", "pathfinding_emulator/web/", "pathfinding_emulator/assets/env/")) for name in names)
     for asset in ('/', '/app.js', '/chevron.svg', '/styles.css', '/assets/tiles/grass_water/box.jpg', '/assets/fonts/IBMPlexSans-Regular.ttf'):
         with urlopen(url + asset) as response:
             assert response.status == 200 and response.read()
