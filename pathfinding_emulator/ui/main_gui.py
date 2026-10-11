@@ -1,208 +1,224 @@
-import os
-
-from ..config import asset_path
-
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import math
+import os
 import sys
 
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame as pg
+
+from . import theme as ui
 
 
 class InputBox:
-    def __init__(self, x, y, w, h, font_size=32, text="", maximum_lengh=sys.maxsize):
-        self.w = w
-        self.h = h
-        self.ml = maximum_lengh
-        self.font = pg.font.Font(None, font_size)
-        self.COLOR_INACTIVE = pg.Color("red")
-        self.COLOR_ACTIVE = pg.Color("green")
+    def __init__(self, x, y, w, h, font_size=24, text="", maximum_lengh=sys.maxsize):
+        self.w, self.h, self.ml = w, h, maximum_lengh
+        self.font = pg.font.SysFont("Arial", font_size)
+        self.COLOR_INACTIVE, self.COLOR_ACTIVE = ui.BORDER, ui.ACCENT
         self.rect = pg.Rect(x, y, w, h)
-        self.color = (255, 255, 255)
-        self.fillcolor = (90, 90, 90)
-        self.text = text
+        self.color, self.fillcolor = ui.TEXT, ui.FIELD
+        self.text, self.active, self.changed = text, False, True
         self.txt_surface = self.font.render(text, True, self.color)
-        self.active = False
-        self.changed = True
 
     def draw(self, screen):
-        pg.draw.rect(screen, self.fillcolor, self.rect)
-        pg.draw.rect(screen, self.color, self.rect, 3 if self.active else 2)
-        self.txt_surface = self.font.render(self.text, True, (255, 255, 255))
+        ui.panel(screen, self.rect, self.fillcolor)
+        pg.draw.rect(
+            screen,
+            ui.ACCENT if self.active else ui.BORDER,
+            self.rect,
+            2 if self.active else 1,
+            border_radius=12,
+        )
+        self.txt_surface = self.font.render(self.text, True, ui.TEXT)
         old_clip = screen.get_clip()
-        screen.set_clip(self.rect.inflate(-8, -4))
-        x = min(self.rect.x + 5, self.rect.right - 5 - self.txt_surface.get_width())
-        screen.blit(self.txt_surface, (x, self.rect.y + 5))
+        screen.set_clip(self.rect.inflate(-20, -4))
+        x = min(self.rect.x + 10, self.rect.right - 10 - self.txt_surface.get_width())
+        screen.blit(
+            self.txt_surface,
+            (x, self.rect.centery - self.txt_surface.get_height() // 2),
+        )
         screen.set_clip(old_clip)
 
 
 class GUI:
+    titles = (
+        "Every puzzle starts with a board.",
+        "Open a saved board",
+        "Make something unexpected",
+        "Build your next challenge",
+    )
+    descriptions = (
+        "Design, experiment, and watch the solution unfold.",
+        "Load a JSON file or a bundled sample such as map_10.",
+        "Choose your dimensions. We will generate the tiles.",
+        "Choose the board size and how many tiles to place.",
+    )
+    labels = (
+        (),
+        ("Map path or sample name",),
+        ("Board artwork (0–3)", "Agent artwork (0–3)", "Rows (1–20)", "Columns (1–20)"),
+        (
+            "Board artwork (0–3)",
+            "Agent artwork (0–3)",
+            "Rows (1–20)",
+            "Columns (1–20)",
+            "Boxes",
+            "Extra holes",
+            "Stones",
+        ),
+    )
+
     def __init__(self, map_path="maps/", env_style=1, agent_style=1):
         pg.init()
-        pg.font.init()
-
-        self.pixelHeight = 400
-        self.pixelWidth = 400
-
-        self.colors = [(180, 180, 180), (0, 66, 94), (255, 255, 255)]
-
-        self.bg = pg.image.load(asset_path("bg.png"))
-        self.bg = pg.transform.scale(self.bg, (self.pixelHeight, self.pixelWidth))
-        self.back = pg.image.load(asset_path("back.png"))
-        self.back = pg.transform.scale(self.back, (45, 45))
-
-        self.font = pg.font.SysFont("arial", 25)
-
+        self.pixelWidth, self.pixelHeight = 960, 680
+        self.page = pg.display.set_mode((960, 680))
         self.which_page = 0
-        self.pages = [
-            self.main_page,
-            self.load_map_page,
-            self.create_map_page,
-            self.design_map_page,
-        ]
-
-        self.page = pg.display.set_mode((self.pixelWidth, self.pixelHeight))
-
         self.map_path = map_path
-        self.default_env_style = env_style
-        self.default_agent_style = agent_style
+        self.default_env_style, self.default_agent_style = env_style, agent_style
+        self.env_style, self.agent_style = env_style, agent_style
+        self.navigation_buttons = [
+            pg.Rect(32 + i * 304, 250, 288, 240) for i in range(3)
+        ]
+        self.back_button = pg.Rect(56, 550, 150, 48)
+        self.submit_button = pg.Rect(692, 550, 212, 48)
         self.page_buttons = self.make_input_boxes()
         self.inputs = [[], [], [], []]
-        self.env_style = env_style
-        self.agent_style = agent_style
-
-        self.Done = False
-        self.command = ""
-        self.message = None
+        self.Done, self.command = False, ""
+        self.message = self.last_message = None
         self.message_until = 0
-        self.last_message = None
-
         self.draw()
 
     def make_input_boxes(self):
-        path_1 = InputBox(50, 110, 300, 31, text=self.map_path)
-
-        env_style_2 = InputBox(
-            260, 71, 45, 31, text=str(self.default_env_style), maximum_lengh=2
-        )
-        agent_style_2 = InputBox(
-            260, 121, 45, 31, text=str(self.default_agent_style), maximum_lengh=2
-        )
-        height_2 = InputBox(260, 171, 45, 31, text="2", maximum_lengh=2)
-        width_2 = InputBox(260, 221, 45, 31, text="2", maximum_lengh=2)
-
-        env_style_3 = InputBox(
-            265, 35, 45, 31, text=str(self.default_env_style), maximum_lengh=2
-        )
-        agent_style_3 = InputBox(
-            145, 101, 45, 31, text=str(self.default_agent_style), maximum_lengh=2
-        )
-        height_3 = InputBox(145, 151, 45, 31, text="2", maximum_lengh=2)
-        width_3 = InputBox(145, 201, 45, 31, text="2", maximum_lengh=2)
-        boxes_3 = InputBox(346, 101, 45, 31, maximum_lengh=3)
-        extra_holes_3 = InputBox(346, 151, 45, 31, maximum_lengh=3)
-        obstacles_3 = InputBox(346, 201, 45, 31, maximum_lengh=3)
-
-        return [
-            [],
-            [path_1],
-            [env_style_2, agent_style_2, height_2, width_2],
-            [
-                env_style_3,
-                agent_style_3,
-                height_3,
-                width_3,
-                boxes_3,
-                extra_holes_3,
-                obstacles_3,
-            ],
-        ]
+        result = [[], [InputBox(56, 260, 848, 52, text=self.map_path)], [], []]
+        for page in (2, 3):
+            values = [
+                str(self.default_env_style),
+                str(self.default_agent_style),
+                "2",
+                "2",
+            ]
+            if page == 3:
+                values += ["", "", ""]
+            result[page] = [
+                InputBox(
+                    56 + (i % 4) * 216,
+                    270 + (i // 4) * 110,
+                    200,
+                    48,
+                    text=value,
+                    maximum_lengh=3,
+                )
+                for i, value in enumerate(values)
+            ]
+        return result
 
     def draw(self):
-        self.page.fill(self.colors[0])
-        self.page.blit(self.bg, (0, 0))
-        if self.which_page != 0:
-            self.page.blit(self.back, (50, 300))
-            pg.draw.rect(self.page, self.colors[1], (150, 300, 100, 45))
-            pg.draw.rect(self.page, self.colors[2], (150, 300, 100, 45), 2)
-            message = "OK"
-            text = self.font.render(message, True, self.colors[2])
-            self.page.blit(text, (185, 308))
-
-        self.pages[self.which_page]()
+        page = self.which_page
+        ui.header(self.page, self.titles[page], self.descriptions[page], "workspace")
+        if page == 0:
+            self.main_page()
+        else:
+            ui.panel(self.page, pg.Rect(32, 160, 896, 460))
+            ui.text(
+                self.page,
+                ("LOAD BOARD", "RANDOM BOARD", "CUSTOM BOARD")[page - 1],
+                (56, 185),
+                14,
+                ui.ACCENT,
+                True,
+            )
+            if page == 3:
+                self.default_text_calculator()
+            self.draw_fields(page, self.labels[page])
+            ui.text(
+                self.page,
+                "Interior dimensions exclude the border. Artwork styles: 0, 1, 2, 3.",
+                (56, 490),
+                17,
+                ui.MUTED,
+            )
+            ui.button(self.page, self.back_button, "Back / Esc")
+            ui.button(
+                self.page,
+                self.submit_button,
+                "Open board" if page == 1 else "Create board",
+                primary=True,
+            )
         self.drawMessage()
-
-    def drawMessage(self):
-        if self.message is not None and type(self.message) is str:
-            pg.font.init()
-            text = pg.font.Font(None, 22).render(self.message, True, pg.Color("white"))
-            if text.get_width() > 380:
-                text = pg.transform.smoothscale(text, (380, text.get_height()))
-            self.page.blit(text, (10, 265))
-            pg.display.update()
-            self.expire_message()
+        pg.display.update()
 
     def main_page(self):
-        # (x_start , y_start , +x , +y)
-        pg.draw.rect(self.page, self.colors[1], (60, 80, 280, 60))
-        pg.draw.rect(self.page, self.colors[2], (60, 80, 280, 60), 2)
-        message = "Load Map"
-        text = self.font.render(message, True, self.colors[2])
-        self.page.blit(text, (150, 95))
-
-        pg.draw.rect(self.page, self.colors[1], (60, 170, 280, 60))
-        pg.draw.rect(self.page, self.colors[2], (60, 170, 280, 60), 2)
-        message = "Create Random Map"
-        text = self.font.render(message, True, self.colors[2])
-        self.page.blit(text, (110, 185))
-
-        pg.draw.rect(self.page, self.colors[1], (60, 260, 280, 60))
-        pg.draw.rect(self.page, self.colors[2], (60, 260, 280, 60), 2)
-        message = "Design Map"
-        text = self.font.render(message, True, self.colors[2])
-        self.page.blit(text, (147, 275))
-
-        pg.display.update()
+        ui.text(self.page, "YOUR NEXT MOVE", (32, 198), 14, ui.ACCENT, True)
+        titles = ("Load a board", "Random board", "Design a board")
+        details = (
+            ("Pick up a saved puzzle", "or explore a sample map."),
+            ("Start with a fresh layout.", "A new challenge every time."),
+            ("Place every box and stone.", "Make the puzzle your own."),
+        )
+        for index, rect in enumerate(self.navigation_buttons):
+            ui.panel(
+                self.page,
+                rect,
+                ui.FIELD if rect.collidepoint(pg.mouse.get_pos()) else ui.PANEL,
+            )
+            pg.draw.rect(self.page, ui.BORDER, rect, 1, border_radius=16)
+            ui.text(
+                self.page,
+                "0" + str(index + 1),
+                (rect.x + 24, rect.y + 24),
+                36,
+                ui.ACCENT,
+                True,
+            )
+            ui.text(self.page, titles[index], (rect.x + 24, rect.y + 90), 23, bold=True)
+            for line, label in enumerate(details[index]):
+                ui.text(
+                    self.page,
+                    label,
+                    (rect.x + 24, rect.y + 132 + line * 25),
+                    17,
+                    ui.MUTED,
+                )
+            ui.text(
+                self.page,
+                "Get started  >",
+                (rect.x + 24, rect.y + 199),
+                17,
+                ui.ACCENT,
+                True,
+            )
+        ui.text(
+            self.page,
+            "01  CREATE     /     02  EDIT     /     03  SOLVE",
+            (32, 550),
+            18,
+            ui.MUTED,
+        )
+        ui.text(
+            self.page,
+            "Press 1, 2 or 3 to choose a workflow. Tab to move between form fields.",
+            (32, 592),
+            17,
+            ui.MUTED,
+        )
 
     def load_map_page(self):
-        message = "Path :"
-        text = self.font.render(message, True, self.colors[2])
-        self.page.blit(text, (50, 70))
-
-        text_boxes = self.page_buttons[1]
-
-        for text_box in text_boxes:
-            text_box.draw(self.page)
-
-        pg.display.update()
+        self.draw_fields(1, self.labels[1])
 
     def create_map_page(self):
-        self.draw_fields(2, ("Environment style", "Agent style", "Height", "Width"))
+        self.draw_fields(2, self.labels[2])
 
     def design_map_page(self):
         self.default_text_calculator()
-        self.draw_fields(
-            3,
-            (
-                "Environment style",
-                "Agent style",
-                "Height",
-                "Width",
-                "Boxes",
-                "Extra holes",
-                "Obstacles",
-            ),
-        )
+        self.draw_fields(3, self.labels[3])
 
     def draw_fields(self, page, labels):
-        font = pg.font.Font(None, 26)
         for box, label in zip(self.page_buttons[page], labels):
-            text = font.render(label, True, self.colors[2])
-            self.page.blit(
-                text, text.get_rect(midright=(box.rect.x - 10, box.rect.centery))
-            )
+            ui.text(self.page, label, (box.rect.x, box.rect.y - 28), 17, ui.MUTED)
             box.draw(self.page)
-        pg.display.update()
+
+    def drawMessage(self):
+        if self.message:
+            self.expire_message()
+            ui.notice(self.page, self.message)
 
     def default_text_calculator(self):
         if (
@@ -225,24 +241,18 @@ class GUI:
         page = self.which_page
 
         if page == 0:
-            if 60 <= x <= 340:
-                if 80 <= y <= 140:
-                    self.which_page = 1
-
-                elif 170 <= y <= 230:
-                    self.which_page = 2
-
-                elif 260 <= y <= 320:
-                    self.which_page = 3
+            for index, rect in enumerate(self.navigation_buttons, 1):
+                if rect.collidepoint(x, y):
+                    self.which_page = index
 
         if page in [1, 2, 3]:
             # Back button
-            if 50 <= x <= 95 and 300 <= y <= 345:
+            if self.back_button.collidepoint(x, y):
                 self.which_page = 0
 
             # text boxes
             for button in self.page_buttons[page]:
-                if button.rect.collidepoint(event.pos):
+                if button.rect.collidepoint(x, y):
                     button.active = not button.active
 
                 else:
@@ -252,15 +262,15 @@ class GUI:
                 )
 
             # OK button
-            if 150 <= x <= 250 and 300 <= y <= 345:
+            if self.submit_button.collidepoint(x, y):
                 page_inputs = []
                 buttons = self.page_buttons[page]
                 for index, button in enumerate(buttons):
-                    if button.text.isdecimal():
-                        page_inputs.append(int(button.text))
-
-                    elif page == 1:
+                    if page == 1:
                         page_inputs.append(button.text)
+
+                    elif button.text.isdecimal():
+                        page_inputs.append(int(button.text))
 
                     elif page == 3 and index >= 4 and not button.text:
                         page_inputs.append(0)
@@ -301,10 +311,12 @@ class GUI:
                 box.color = box.COLOR_ACTIVE if box.active else box.COLOR_INACTIVE
             return
         if page and event.key == pg.K_RETURN:
-            self.user_click(pg.event.Event(pg.MOUSEBUTTONDOWN, pos=(200, 320)))
+            self.user_click(
+                pg.event.Event(pg.MOUSEBUTTONDOWN, pos=self.submit_button.center)
+            )
             return
-        if page == 0:
-            pass
+        if page == 0 and event.key in (pg.K_1, pg.K_2, pg.K_3):
+            self.which_page = event.key - pg.K_1 + 1
 
         if page in [1, 2, 3]:
             for button in self.page_buttons[page]:

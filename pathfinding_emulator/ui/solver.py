@@ -6,6 +6,7 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
 import pygame as pg
 
+from . import theme as ui
 from .main_gui import InputBox
 from .tiles import draw_board, load_tiles
 
@@ -33,50 +34,34 @@ class Solver:
             self.direction_images["down"],
         )
 
-        self.back = pg.image.load(asset_path("back.png"))
-        self.back = pg.transform.scale(
-            self.back, (int(0.66 * cubeSize), int(0.66 * cubeSize))
-        )
-
-        self.increase = pg.image.load(asset_path("increase.png"))
-        self.increase = pg.transform.scale(
-            self.increase, (int(0.5 * cubeSize), int(0.3 * cubeSize))
-        )
-
-        self.decrease = pg.image.load(asset_path("decrease.png"))
-        self.decrease = pg.transform.scale(
-            self.decrease, (int(0.5 * cubeSize), int(0.3 * cubeSize))
-        )
-
         self.back_to_mapeditor = False
-
         self.delay = delay
-        w = len(state.map_array[0])
-        h = len(state.map_array)
-        self.celltype = ["stone", "hole", "empty", "box"]
         self.cubeSize = cubeSize
-        self.pixelWidth, self.pixelHeight = (
-            max(4, w) * (self.cubeSize + 1) - 1,
-            h * self.cubeSize + h - 1,
+        self.page, self.board_area, self.board_rect, self.sidebar = ui.workspace(
+            len(state.map_array[0]), len(state.map_array), cubeSize
         )
-        self.page = pg.display.set_mode(
-            (self.pixelWidth, self.pixelHeight + 3 * self.cubeSize)
-        )
-
+        self.pixelWidth, self.pixelHeight = self.board_rect.size
+        left = self.sidebar.x + 20
+        self.decrease_button = pg.Rect(left, 426, 52, 48)
+        self.increase_button = pg.Rect(left + 172, 426, 52, 48)
+        self.back_button = pg.Rect(left, 550, 224, 48)
         self.delayinput = InputBox(
-            0.5 * self.pixelWidth - 2 * self.cubeSize + 1.5 * self.cubeSize,
-            self.pixelHeight + 1.4 * self.cubeSize,
-            0.7 * self.cubeSize,
-            0.6 * self.cubeSize,
-            text=str(delay),
-            font_size=int(0.6 * self.cubeSize),
+            left + 64, 426, 96, 48, text=str(delay), font_size=22
         )
-
+        self.steps = 0
+        self.status = "Ready"
         self.redrawPage(state)
 
     def redrawPage(self, game, action=None):
         mapArr = game.previous_map
-        self.page.fill((60, 60, 60))
+        ui.header(
+            self.page,
+            "Watch the solution unfold.",
+            "Follow each push. Adjust the pace or return to edit your board.",
+            "simulation",
+        )
+        ui.panel(self.page, self.board_area)
+        ui.panel(self.page, self.sidebar)
         self.drawTile(mapArr)
         self.drawAction(action)
         self.drawTexts(game)
@@ -89,15 +74,15 @@ class Solver:
         pg.display.update()
 
     def drawTile(self, array):
-        draw_board(self.page, array, self.tiles, self.cubeSize)
+        draw_board(self.page, array, self.tiles, self.cubeSize, self.board_rect.topleft)
 
     def drawAction(self, action):
         if action is not None:
             self.page.blit(
                 self.direction_images[action.direction],
                 (
-                    self.pixelPos(action.y) - self.cubeSize / 2,
-                    self.pixelPos(action.x) - self.cubeSize / 2,
+                    self.board_rect.x + self.pixelPos(action.y) - self.cubeSize / 2,
+                    self.board_rect.y + self.pixelPos(action.x) - self.cubeSize / 2,
                 ),
             )
 
@@ -124,15 +109,24 @@ class Solver:
                     for cell in cells_to_move:
                         self.page.blit(
                             self.floor_img,
-                            (self.pixelPos(cell[1]), self.pixelPos(cell[0])),
+                            (
+                                self.board_rect.x + self.pixelPos(cell[1]),
+                                self.board_rect.y + self.pixelPos(cell[0]),
+                            ),
                         )
 
                     for cell in cells_to_move:
                         self.page.blit(
                             self.box_img,
                             (
-                                self.pixelPos(cell[1]) + state.h * k * step + state.h,
-                                self.pixelPos(cell[0]) + state.v * k * step + state.v,
+                                self.board_rect.x
+                                + self.pixelPos(cell[1])
+                                + state.h * k * step
+                                + state.h,
+                                self.board_rect.y
+                                + self.pixelPos(cell[0])
+                                + state.v * k * step
+                                + state.v,
                             ),
                         )
 
@@ -155,111 +149,60 @@ class Solver:
                             self.user_write(event)
 
     def drawButtons(self):
-        self.page.blit(
-            self.back,
-            (
-                0.5 * self.pixelWidth - 2 * self.cubeSize + 3.23 * self.cubeSize,
-                self.pixelHeight + 2.22 * self.cubeSize,
-            ),
-        )
-        self.page.blit(
-            self.increase,
-            (
-                0.5 * self.pixelWidth - 2 * self.cubeSize + 1.6 * self.cubeSize,
-                self.pixelHeight + 1 * self.cubeSize,
-            ),
-        )
-        self.page.blit(
-            self.decrease,
-            (
-                0.5 * self.pixelWidth - 2 * self.cubeSize + 1.6 * self.cubeSize,
-                self.pixelHeight + 2.1 * self.cubeSize,
-            ),
-        )
+        ui.button(self.page, self.decrease_button, "−")
+        ui.button(self.page, self.increase_button, "+")
         self.delayinput.draw(self.page)
-        pg.display.update()
+        ui.button(self.page, self.back_button, "Return to editor / Esc")
 
     def drawTexts(self, state):
-        pg.font.init()
-        pg.draw.rect(
+        ui.panel(self.page, self.sidebar)
+        x = self.sidebar.x + 20
+        ui.text(self.page, "RUN OVERVIEW", (x, 154), 14, ui.ACCENT, True)
+        ui.text(self.page, self.status, (x, 192), 25, ui.ACCENT, True)
+        ui.text(self.page, "TOTAL MOVEMENT COST", (x, 244), 14, ui.MUTED)
+        ui.text(self.page, state.cost, (x, 268), 40, bold=True)
+        boxes = sum(row.count(1) for row in state.map_array)
+        ui.text(
             self.page,
-            (60, 60, 60),
-            (0, self.pixelHeight, self.pixelWidth, self.cubeSize * 3),
+            f"{self.steps} actions  /  {boxes} boxes left",
+            (x, 338),
+            17,
+            ui.MUTED,
         )
-        font = pg.font.SysFont("arial", int(0.45 * self.cubeSize))
-        color = (255, 255, 255)
-        message = "Total cost: " + str(state.cost)
-        text = font.render(message, True, color)
-        self.page.blit(
-            text,
-            (
-                0.5 * self.pixelWidth - 2 * self.cubeSize + 0.15 * self.cubeSize,
-                self.pixelHeight + 0.2 * self.cubeSize,
-            ),
-        )
-
-        text = font.render("Delay :          (s)", True, color)
-        self.page.blit(
-            text,
-            (
-                0.5 * self.pixelWidth - 2 * self.cubeSize + 0.2 * self.cubeSize,
-                self.pixelHeight + 1.4 * self.cubeSize,
-            ),
-        )
+        ui.text(self.page, "SECONDS BETWEEN PUSHES", (x, 392), 14, ui.MUTED)
+        ui.text(self.page, "− faster     + slower", (x, 492), 17, ui.MUTED)
 
     def colorCube(self, i, j, celltype):
-        self.page.blit(self.tiles[celltype], (self.pixelPos(i), self.pixelPos(j)))
+        self.page.blit(
+            self.tiles[celltype],
+            (
+                self.board_rect.x + self.pixelPos(i),
+                self.board_rect.y + self.pixelPos(j),
+            ),
+        )
 
     def pixelPos(self, i):
-        return i * self.cubeSize + i
+        return i * (self.cubeSize + 1)
 
     def user_click(self, event=None):
-        x, y = event.pos if event is not None else pg.mouse.get_pos()
-
-        if (
-            0.5 * self.pixelWidth - 2 * self.cubeSize + 1.6 * self.cubeSize
-            <= x
-            <= 0.5 * self.pixelWidth
-            - 2 * self.cubeSize
-            + 1.6 * self.cubeSize
-            + 0.5 * self.cubeSize
-        ):
-            if (
-                self.pixelHeight + 1 * self.cubeSize
-                <= y
-                <= self.pixelHeight + 1 * self.cubeSize + 0.3 * self.cubeSize
-            ):
-                if float(self.delayinput.text) < 99:
-                    self.delayinput.text = str(
-                        min(99, float(self.delayinput.text) + 0.25)
-                    )
-            elif (
-                self.pixelHeight + 2.1 * self.cubeSize
-                <= y
-                <= self.pixelHeight + 2.1 * self.cubeSize + 0.3 * self.cubeSize
-            ):
-                if float(self.delayinput.text) > 0:
-                    self.delayinput.text = str(
-                        max(0, float(self.delayinput.text) - 0.25)
-                    )
-
-        elif (
-            0.5 * self.pixelWidth - 2 * self.cubeSize + 3.23 * self.cubeSize
-            <= x
-            <= 0.5 * self.pixelWidth
-            - 2 * self.cubeSize
-            + 3.23 * self.cubeSize
-            + int(0.66 * self.cubeSize)
-        ):
-            if (
-                self.pixelHeight + 2.22 * self.cubeSize
-                <= y
-                <= self.pixelHeight + 2.22 * self.cubeSize + int(0.66 * self.cubeSize)
-            ):
-                self.back_to_mapeditor = True
+        pos = event.pos if event is not None else pg.mouse.get_pos()
+        if self.increase_button.collidepoint(pos):
+            self.delayinput.text = str(min(99, float(self.delayinput.text) + 0.25))
+        elif self.decrease_button.collidepoint(pos):
+            self.delayinput.text = str(max(0, float(self.delayinput.text) - 0.25))
+        elif self.back_button.collidepoint(pos):
+            self.back_to_mapeditor = True
         self.drawButtons()
         pg.display.update()
 
     def user_write(self, event):
         if event.key == pg.K_ESCAPE:
             self.back_to_mapeditor = True
+        elif event.key in (pg.K_PLUS, pg.K_EQUALS, pg.K_KP_PLUS):
+            self.user_click(
+                pg.event.Event(pg.MOUSEBUTTONDOWN, pos=self.increase_button.center)
+            )
+        elif event.key in (pg.K_MINUS, pg.K_KP_MINUS):
+            self.user_click(
+                pg.event.Event(pg.MOUSEBUTTONDOWN, pos=self.decrease_button.center)
+            )

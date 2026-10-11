@@ -232,3 +232,15 @@ Context7 and Archify were not installed/available; ordinary engineering methods,
 official Python/Pygame documentation and editable source-grounded Mermaid were
 used. The UI/UX skill supplied targeted form-error guidance. No unavailable tool
 is claimed as executed.
+
+## UI follow-up
+
+After the initial modernization snapshot above, the desktop presentation was
+redesigned with shared dark colors, typography and rounded surfaces. The
+launcher has three workflow cards; forms have persistent labels and visible
+focus; the editor and solver use a centered board with a separate tool panel.
+The solver displays planning/solving/completed status, action count, remaining
+boxes and movement cost. Board coordinate handling includes the new origin.
+Original artwork and simulation rules remain intact. The README includes four
+real Pygame screenshots and a reproducible capture command. The earlier source
+line counts describe the initial modernization, before this UI follow-up.

@@ -5,6 +5,24 @@ board, generate a seeded random board, or load one of the 14 original maps;
 then watch an agent clear the boxes while the simulator tracks movement cost.
 The four original artwork themes remain available.
 
+## A modern desktop workspace
+
+A consistent dark interface pairs a centered puzzle board with clear editing
+controls and live run statistics. These are **actual screenshots of the Pygame
+application**, captured from the screens in this repository.
+
+![Launcher with three puzzle workflows](docs/screenshots/launcher.png)
+
+| Configure a board | Edit the puzzle |
+|---|---|
+| ![Custom board settings](docs/screenshots/setup.png) | ![Editor with tile palette and remaining counts](docs/screenshots/editor.png) |
+
+![Solver showing movement cost, actions, remaining boxes, and speed controls](docs/screenshots/solver.png)
+
+Regenerate the screenshots after UI changes with
+`python -m tools.capture_screenshots` from the repository root. The capture uses
+Pygame's display-independent driver and does not require a desktop session.
+
 ## Setup and run
 
 Use **Python 3.11–3.13**. Python 3.12 is recommended. A desktop display is needed
@@ -57,20 +75,21 @@ Random generation is bounded and does **not** guarantee solvability.
 
 ## Desktop workflow
 
-Choose Load Map, Create Random Map, or Design Map. Dimensions on both creation
+Choose Load a board, Random board, or Design a board. Dimensions on both creation
 screens mean **interior cells**. Artwork styles are 0–3. The GUI supports up to
 20 × 20 interior cells and scales tiles to the desktop where possible.
 Headless boards support up to 100 × 100.
 
 In the editor, select a tile type and place the displayed remaining tiles.
 Click an existing tile to remove it and return it to the quota. Stones may also
-replace border holes. Save creates a new JSON file; OK starts the selected
-agent. The solver's arrows adjust delay; Back returns to the original edited
-board. Completed and failed runs report their status.
+replace border holes. Save JSON creates a new file; Solve board starts the selected
+agent. The solver’s minus/plus buttons adjust delay; Return to editor returns
+to the original edited board. Completed and failed runs report their status.
 
-Keyboard support: Tab focuses setup inputs, Enter submits a form or completed
+Keyboard support: 1/2/3 chooses a launcher workflow, Tab focuses setup inputs,
+Enter submits a form or completed
 editor, Escape returns to the previous screen, and H/S/B selects hole/stone/box
-in the editor. Board placement still requires a mouse; full keyboard editing
+in the editor. Minus/plus adjusts solver delay. Board placement still requires a mouse; full keyboard editing
 and screen-reader accessibility are not implemented.
 
 ## Configuration

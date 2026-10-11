@@ -21,9 +21,10 @@ def load_tiles(style, size):
     }
 
 
-def draw_board(screen, grid, tiles, size):
+def draw_board(screen, grid, tiles, size, origin=(0, 0)):
     for row, cells in enumerate(grid):
         for col, tile in enumerate(cells):
             screen.blit(
-                tiles[TILE_NAMES[tile + 2]], (col * (size + 1), row * (size + 1))
+                tiles[TILE_NAMES[tile + 2]],
+                (origin[0] + col * (size + 1), origin[1] + row * (size + 1)),
             )

@@ -47,8 +47,8 @@ def run_gui(settings, designer, initial_map=None):
         desktop_width, desktop_height = pg.display.get_desktop_sizes()[0]
         fit = min(
             settings.cell_size,
-            max(20, (desktop_width - 40) // len(grid[0]) - 1),
-            max(20, (desktop_height - 60) // (len(grid) + 3) - 1),
+            max(20, (desktop_width - 368) // len(grid[0]) - 1),
+            max(20, (desktop_height - 192) // len(grid) - 1),
         )
         kwargs = {}
         if quotas and gui is not None and gui.command == "design_map":
@@ -182,6 +182,8 @@ def run_gui(settings, designer, initial_map=None):
                         editor = make_editor(designer.mapArr, gui)
                         screen = "editor"
                     elif planner is not None:
+                        solver.status = "Planning..."
+                        solver.redrawPage(env.state)
                         # Cooperatively budget planning each frame so Back/Quit work.
                         deadline = time.monotonic() + 0.008
                         while time.monotonic() < deadline:
@@ -195,6 +197,8 @@ def run_gui(settings, designer, initial_map=None):
                             "PathFinding Emulator — planning; Esc to cancel"
                         )
                     elif env.goal_test():
+                        solver.status = "Solved"
+                        solver.redrawPage(env.state)
                         pg.display.set_caption(
                             f"Solved — cost {env.send_cost()}, {steps} actions; Esc to edit"
                         )
@@ -213,8 +217,10 @@ def run_gui(settings, designer, initial_map=None):
                             else plan.popleft()
                         )
                         env.take_action(action.return_action())
-                        solver.redrawPage(env.state, action)
                         steps += 1
+                        solver.steps = steps
+                        solver.status = "Solving..."
+                        solver.redrawPage(env.state, action)
                         next_action = time.monotonic() + float(solver.delayinput.text)
                         pg.display.set_caption(
                             "PathFinding Emulator — solving; Esc to edit"

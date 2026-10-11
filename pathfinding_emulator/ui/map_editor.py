@@ -4,8 +4,9 @@ from copy import deepcopy
 
 import pygame as pg
 
-from ..config import asset_path, validate_styles
+from ..config import validate_styles
 from ..environment import base_map, validate_map
+from . import theme as ui
 from .tiles import TILE_NAMES, draw_board, load_tiles
 
 
@@ -77,30 +78,13 @@ class MapEditor:
             pg.transform.scale(self.tiles[name], (int(0.52 * cubeSize),) * 2)
             for name in ("box", "hole", "stone")
         ]
-        self.back = pg.transform.scale(
-            pg.image.load(asset_path("back.png")), (int(0.66 * cubeSize),) * 2
+        self.page, self.board_area, self.board_rect, self.sidebar = ui.workspace(
+            self.x, self.y, cubeSize
         )
-        self.pixelWidth, self.pixelHeight = (
-            max(4, self.x) * (cubeSize + 1) - 1,
-            self.y * (cubeSize + 1) - 1,
-        )
-        self.page = pg.display.set_mode(
-            (self.pixelWidth, self.pixelHeight + 3 * cubeSize)
-        )
-        left = 0.5 * self.pixelWidth - 1.8 * cubeSize
-        self.tile_buttons = [
-            pg.Rect(
-                left,
-                self.pixelHeight + offset * cubeSize,
-                2 * cubeSize,
-                0.66 * cubeSize,
-            )
-            for offset in (0.7, 1.46, 2.22)
-        ]
-        self.control_buttons = [
-            pg.Rect(left + 2.3 * cubeSize, rect.y, 1.4 * cubeSize, rect.height)
-            for rect in self.tile_buttons
-        ]
+        self.pixelWidth, self.pixelHeight = self.board_rect.size
+        left = self.sidebar.x + 20
+        self.tile_buttons = [pg.Rect(left, 200 + i * 64, 224, 52) for i in range(3)]
+        self.control_buttons = [pg.Rect(left, yy, 224, 48) for yy in (430, 490, 550)]
         self.last_mouse_click = [None, None]
         self.Done = self.save = self.back_to_gui = False
         self.saved_path = self.message = self.last_message = None
@@ -119,83 +103,76 @@ class MapEditor:
         return base_map(self.y - 2, self.x - 2)
 
     def redrawPage(self):
-        self.page.fill(self.colors[1])
-        self.drawLines()
+        ui.header(
+            self.page,
+            "Shape the challenge.",
+            "Select a tile, then click the board. Click a placed tile to remove it.",
+            "editor",
+        )
+        ui.panel(self.page, self.board_area)
+        ui.panel(self.page, self.sidebar)
         self.drawTile(self.map)
         self.drawButtons()
         self.drawMessage()
         pg.display.update()
 
     def drawButtons(self):
-        for index, (rect, icon) in enumerate(
-            zip(self.tile_buttons, (self.small_hole, self.small_stone, self.small_box))
+        ui.text(
+            self.page, "TILE PALETTE", (self.sidebar.x + 20, 154), 14, ui.ACCENT, True
+        )
+        for index, (rect, name, key) in enumerate(
+            zip(self.tile_buttons, ("Hole", "Stone", "Box"), ("H", "S", "B"))
         ):
-            pg.draw.rect(self.page, self.colors[2], rect)
-            pg.draw.rect(
-                self.page, self.colors[3 + self.active_buttons[index]], rect, 3
+            ui.button(
+                self.page,
+                rect,
+                f"{name}  [{key}]       {self.remained[index]} left",
+                selected=self.active_buttons[index],
             )
-            self.page.blit(
-                icon, (rect.x + 0.1 * self.cubeSize, rect.y + 0.07 * self.cubeSize)
-            )
-            text = self.font.render(str(self.remained[index]), True, self.colors[0])
-            self.page.blit(
-                text, (rect.x + 1.15 * self.cubeSize, rect.y + 0.2 * self.cubeSize)
-            )
-        for rect, label, color in zip(self.control_buttons[:2], ("OK", "Save"), (5, 7)):
-            pg.draw.rect(self.page, self.colors[color], rect)
-            pg.draw.rect(self.page, self.colors[color + 1], rect, 3)
-            text = self.font.render(label, True, self.colors[0])
-            self.page.blit(text, text.get_rect(center=rect.center))
+        ui.text(
+            self.page,
+            f"{self.y - 2} rows × {self.x - 2} columns",
+            (self.sidebar.x + 20, 396),
+            17,
+            ui.MUTED,
+        )
+        for rect, label in zip(
+            self.control_buttons,
+            ("Solve board / Enter", "Save JSON", "New board / Esc"),
+        ):
+            ui.button(self.page, rect, label, primary=rect == self.control_buttons[0])
+
+    def drawLines(self):
+        pass  # Board spacing is rendered by the shared tile renderer.
+
+    def drawTile(self, array):
+        draw_board(self.page, array, self.tiles, self.cubeSize, self.board_rect.topleft)
+
+    def drawMessage(self):
+        if self.message != self.last_message:
+            self.last_message = self.message
+            self.message_until = pg.time.get_ticks() + 5000
+        if pg.time.get_ticks() >= self.message_until:
+            self.message = self.last_message = None
+        ui.notice(self.page, self.message)
+
+    def colorCube(self, i, j, celltype):
         self.page.blit(
-            self.back,
+            self.tiles[celltype],
             (
-                self.control_buttons[2].right - self.back.get_width(),
-                self.control_buttons[2].y,
+                self.board_rect.x + self.pixelPos(i),
+                self.board_rect.y + self.pixelPos(j),
             ),
         )
 
-    def drawLines(self):
-        for col in range(1, self.x):
-            pg.draw.line(
-                self.page,
-                self.colors[0],
-                (self.pixelPos(col), 0),
-                (self.pixelPos(col), self.pixelHeight),
-            )
-        for row in range(1, self.y):
-            pg.draw.line(
-                self.page,
-                self.colors[0],
-                (0, self.pixelPos(row)),
-                (self.pixelWidth, self.pixelPos(row)),
-            )
-
-    def drawTile(self, array):
-        draw_board(self.page, array, self.tiles, self.cubeSize)
-
-    def drawMessage(self):
-        if isinstance(self.message, str):
-            if self.message != self.last_message:
-                self.last_message = self.message
-                self.message_until = pg.time.get_ticks() + 3000
-            if pg.time.get_ticks() >= self.message_until:
-                self.message = self.last_message = None
-                return
-            text = self.font.render(self.message, True, self.colors[0])
-            if text.get_width() > self.pixelWidth - 10:
-                text = pg.transform.smoothscale(
-                    text, (self.pixelWidth - 10, text.get_height())
-                )
-            self.page.blit(text, (5, self.pixelHeight + 5))
-
-    def colorCube(self, i, j, celltype):
-        self.page.blit(self.tiles[celltype], (self.pixelPos(i), self.pixelPos(j)))
-
     def user_click(self, event=None):
         x, y = event.pos if event is not None else pg.mouse.get_pos()
-        row, column = self.whichTile(y), self.whichTile(x)
-        self.last_mouse_click = [row, column]
-        if 0 <= row < self.y and 0 <= column < self.x:
+        if self.board_rect.collidepoint(x, y):
+            row, column = (
+                self.whichTile(y - self.board_rect.y),
+                self.whichTile(x - self.board_rect.x),
+            )
+            self.last_mouse_click = [row, column]
             self.update_map(row, column)
         else:
             self.update_buttons(x, y)
