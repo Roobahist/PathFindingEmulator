@@ -1,0 +1,2 @@
+# Runtime dependency; synchronized with pyproject.toml.
+pygame==2.6.1

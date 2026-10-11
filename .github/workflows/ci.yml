@@ -1,0 +1,38 @@
+name: Quality checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: windows-latest
+            python: '3.13'
+    runs-on: ${{ matrix.os }}
+    env:
+      SDL_VIDEODRIVER: dummy
+      SDL_AUDIODRIVER: dummy
+      PYGAME_HIDE_SUPPORT_PROMPT: hide
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - run: python -m pip install -r requirements-dev.lock
+      - run: python -m pip install -e . --no-build-isolation --no-deps
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python -m unittest discover -v
+      - run: python -m pathfinding_emulator --headless --map map_10 --algorithm A_Star
+      - run: python -m build --no-isolation
+      - run: python tools/check_wheel.py
+      - if: matrix.os == 'ubuntu-latest'
+        run: python -m pip_audit -r requirements-dev.lock --disable-pip --no-deps
