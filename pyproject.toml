@@ -27,7 +27,7 @@ namespaces = false
 include = ["pathfinding_emulator*"]
 
 [tool.setuptools.package-data]
-pathfinding_emulator = ["browser/static/*.svg", "browser/static/*.html", "browser/static/*.css", "browser/static/*.js", "assets/fonts/*.ttf", "assets/fonts/*.txt", "assets/*.png", "assets/tiles/*/*.jpg", "assets/pointers/*/*.png", "sample_maps/*.pickle"]
+pathfinding_emulator = ["browser/static/*.svg", "browser/static/*.html", "browser/static/*.css", "browser/static/*.js", "assets/fonts/*.ttf", "assets/fonts/*.txt", "assets/*.png", "assets/tiles/*/*.jpg", "assets/pointers/*/*.png", "sample_maps/*.pickle", "sample_maps/*.json"]
 
 [tool.ruff]
 target-version = "py311"

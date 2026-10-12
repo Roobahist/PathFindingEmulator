@@ -69,7 +69,7 @@ def make_server(settings, designer, initial_map=None, port=0):
     initial = (
         browser_grid(initial_map)
         if initial_map is not None
-        else ChallengeDesigner().load_map(SAMPLE_MAPS_DIR / "map_13.pickle")
+        else ChallengeDesigner().load_map(SAMPLE_MAPS_DIR / "map_0.json")
     )
 
     class Handler(BaseHTTPRequestHandler):
@@ -94,7 +94,7 @@ def make_server(settings, designer, initial_map=None, port=0):
                             "grid": initial,
                             "title": "Loaded board"
                             if initial_map is not None
-                            else "Map 13",
+                            else "Map 0",
                             "algorithm": settings.algorithm,
                             "delay": settings.delay,
                             "seed": settings.seed,
@@ -102,9 +102,14 @@ def make_server(settings, designer, initial_map=None, port=0):
                         }
                     )
                 elif parsed.path == "/api/maps":
-                    names = {p.name for p in SAMPLE_MAPS_DIR.glob("*.pickle")}
-                    names.update(p.name for p in settings.maps_dir.glob("*.json"))
-                    self.send_json({"maps": sorted(names)})
+                    # Prefer curated JSON levels without duplicating legacy pickles.
+                    names = {p.stem: p.name for p in SAMPLE_MAPS_DIR.glob("*.pickle")}
+                    names.update(
+                        {p.stem: p.name for p in SAMPLE_MAPS_DIR.glob("*.json")}
+                    )
+                    for path in settings.maps_dir.glob("*.json"):
+                        names.setdefault(path.stem, path.name)
+                    self.send_json({"maps": sorted(names.values())})
                 elif parsed.path == "/api/map":
                     name = parse_qs(parsed.query).get("name", [""])[0]
                     if (

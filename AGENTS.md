@@ -9,7 +9,7 @@
 - Keep one movement/scoring implementation. Search identity must include the
   continuation cell/direction and prior chain length, not only box locations.
 - Tile values -2/-1/0/1 and `(row, column, direction)` are compatibility contracts.
-  Preserve original maps and artwork. Legacy import shims live in `compat/`; only `Main.py` remains as a root launcher.
+  Preserve original pickle maps and artwork; new JSON challenges supersede legacy pickles in the browser library. Legacy import shims live in `compat/`; only `Main.py` remains as a root launcher.
   Core source lives under `src/pathfinding_emulator/`.
 - Use snake_case for new APIs. Preserve legacy Pygame class/member names used by
   compatibility imports unless a migration is documented.

@@ -180,7 +180,10 @@ class ChallengeDesigner:
         while True:
             path = self.maps_dir / f"map_{index}.json"
             # Avoid reusing names of the bundled/legacy pickle maps.
-            if path.with_suffix(".pickle").exists():
+            if (
+                path.with_suffix(".pickle").exists()
+                or (SAMPLE_MAPS_DIR / path.name).exists()
+            ):
                 index += 1
                 continue
             try:

@@ -80,7 +80,7 @@ Random generation is bounded and does **not** guarantee solvability.
 
 ## Browser workflow
 
-Open a sample from the map library, import a JSON grid, or create an empty or
+Open one of 14 curated, progressively harder sample maps from the library, import a JSON grid, or create an empty or
 random board. Dimensions mean **interior cells**, up to 20 × 20. Select a tile
 and click or drag to paint; right-click erases. Borders stay holes or stones.
 Undo restores the previous edit. Save map creates a new JSON file in `--maps-dir`.
@@ -90,7 +90,7 @@ Choose Random, A*, IDS, BFS, DFS or Greedy, then Solve & play. Pause, step forwa
 through the real solution frames. Pace adjusts the time between pushes. Returning
 to Editor restores the original edited board; editing discards the old solution.
 Search and replay are bounded; errors explain when a board is unsolvable or a
-limit prevents finding a solution. The smaller maps 10–12 are quick starting points.
+limit prevents finding a solution. Start with maps 0–3, then progress to maps 4–13. Every bundled JSON challenge has been verified with the cost-minimizing solver. See [sample challenges](docs/sample-challenges.md) for the tested solution lengths and costs.
 
 Keyboard: Tab enters the board, arrow keys choose a cell, Space/Enter paints,
 Delete/Backspace erases, H/S/B/E selects hole/stone/box/floor, Ctrl/Cmd+Z undoes,
@@ -134,7 +134,10 @@ directory. The editor's tile count fields apply only to new designs.
 ## Map storage and compatibility
 
 New saves are validated, human-readable JSON and use exclusive creation to avoid
-overwriting an existing map. Original `.pickle` files remain unchanged. Legacy
+overwriting an existing map. Original `.pickle` files remain unchanged. The 14 curated JSON maps now take
+precedence in the browser library and when loading extensionless names such as
+`map_0`; explicit `map_0.pickle` still loads the corresponding historical map.
+Saving new boards skips reserved sample-level filenames. Legacy
 loads accept only list/integer/memo opcodes, reject Python object construction,
 limit memo indices, and enforce a 1 MiB file limit and board-size validation.
 Use JSON when exchanging maps. There are no credentials, cloud services, databases or migrations. The browser

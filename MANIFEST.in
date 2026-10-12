@@ -1,6 +1,7 @@
 include AGENTS.md requirements.txt requirements-dev.lock .gitignore
 include Main.py
 recursive-include docs *.md *.png *.jpg *.json
+recursive-include src/pathfinding_emulator/sample_maps *.pickle *.json
 recursive-include tests *.py *.json
 recursive-include tools *.py
 recursive-include compat *.py *.md

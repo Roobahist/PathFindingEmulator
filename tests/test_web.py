@@ -63,11 +63,13 @@ class BrowserServerTests(unittest.TestCase):
     def test_sample_library_and_bootstrap(self):
         status, body, _ = self.request("/api/bootstrap")
         self.assertEqual(status, 200)
-        self.assertEqual(json.loads(body)["title"], "Map 13")
+        self.assertEqual(json.loads(body)["title"], "Map 0")
         _, body, _ = self.request("/api/maps")
-        self.assertEqual(len(json.loads(body)["maps"]), 14)
-        _, body, _ = self.request("/api/map?name=map_10.pickle")
-        self.assertEqual(len(json.loads(body)["grid"]), 4)
+        names = json.loads(body)["maps"]
+        self.assertEqual(len(names), 14)
+        self.assertEqual(set(names), {f"map_{i}.json" for i in range(14)})
+        _, body, _ = self.request("/api/map?name=map_10.json")
+        self.assertEqual(len(json.loads(body)["grid"]), 7)
         self.assertEqual(self.request("/api/map?name=../secret.json")[0], 400)
 
     def test_replay_matches_engine_scoring_and_preserves_input(self):
