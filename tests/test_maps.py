@@ -44,7 +44,11 @@ class MapsTests(unittest.TestCase):
     def test_legacy_windows_and_extensionless_paths(self):
         designer = ChallengeDesigner()
         self.assertEqual(
-            designer.load_map(r"maps\map_7"), load_map(SAMPLE_MAPS_DIR / "map_7.pickle")
+            designer.load_map(r"maps\map_7"), load_map(SAMPLE_MAPS_DIR / "map_7.json")
+        )
+        self.assertEqual(
+            designer.load_map(r"maps\map_7.pickle"),
+            load_map(SAMPLE_MAPS_DIR / "map_7.pickle"),
         )
         with self.assertRaises(FileNotFoundError):
             designer.load_map("/missing/custom/map_7")
