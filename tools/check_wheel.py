@@ -15,7 +15,8 @@ if len(wheels) != 1:
 with zipfile.ZipFile(wheels[0]) as archive:
     names = archive.namelist()
     assert sum(name.endswith(".pickle") for name in names) == 14
-    assert sum(name.startswith("pathfinding_emulator/sample_maps/") and name.endswith(".json") for name in names) == 14
+    for index in range(14):
+        assert f"pathfinding_emulator/sample_maps/map_{index}.json" in names
     assert sum(name.endswith((".png", ".jpg")) for name in names) == 37
     for module in (
         "pathfinding_emulator/browser/server.py",
