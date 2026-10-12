@@ -15,6 +15,7 @@ if len(wheels) != 1:
 with zipfile.ZipFile(wheels[0]) as archive:
     names = archive.namelist()
     assert sum(name.endswith(".pickle") for name in names) == 14
+    assert sum(name.startswith("pathfinding_emulator/sample_maps/") and name.endswith(".json") for name in names) == 14
     assert sum(name.endswith((".png", ".jpg")) for name in names) == 37
     for module in (
         "pathfinding_emulator/browser/server.py",
@@ -91,8 +92,8 @@ import json
 import threading
 from pathlib import Path
 from urllib.request import urlopen
-from pathfinding_emulator.config import Settings
-from pathfinding_emulator.maps import ChallengeDesigner
+from pathfinding_emulator.config import Settings, SAMPLE_MAPS_DIR
+from pathfinding_emulator.maps import ChallengeDesigner, load_map
 from pathfinding_emulator.browser.server import make_server
 server = make_server(Settings(maps_dir=Path('saved')), ChallengeDesigner(Path('saved')))
 thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -103,7 +104,7 @@ try:
         with urlopen(url + asset) as response:
             assert response.status == 200 and response.read()
     with urlopen(url + '/api/bootstrap') as response:
-        assert len(json.load(response)['grid']) == 7
+        assert json.load(response)['grid'] == load_map(SAMPLE_MAPS_DIR / 'map_0.json')
 finally:
     server.shutdown()
     server.server_close()
